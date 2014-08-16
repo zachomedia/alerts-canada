@@ -27,7 +27,7 @@ package ca.zacharyseguin.alertscanada;
  * AlertsListener is an interface that can be implemented to
  * receive new, updated and ended alerts.
  *
- * @author      Zachary Seguin
+ * @author      Zachary Seguin (contact@zacharyseguin.ca)
  * @version     1.0
  * @since       1.0
  */

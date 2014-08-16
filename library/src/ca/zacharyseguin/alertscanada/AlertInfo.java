@@ -23,30 +23,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package ca.zacharyseguin.alertscanada;
 
+import java.io.Serializable;
+
 /**
- * AlertsCanada is the class which is responsible for handling
- * the connection to the NAAD system.
+ * Details of an issued alert.
  *
- * The class also accepts handlers which are called when the application
- * receives a new alert, an updated alert or an alert has expired.
- *
- * @author      Zachary Seguin
+ * @author      Zachary Seguin (contact@zacharyseguin.ca)
  * @version     1.0
  * @since       1.0
  */
-public class AlertsCanada
+public class AlertInfo implements Serializable
 {
-    /**
-     * List of active alerts.
-     *
-     * @since 1.0
-     */
-    private List<Alert> alerts;
 
-    /**
-     * List of registered alert listeners.
-     *
-     * @since 1.0
-     */
-    private List<AlertsListener> alertsListeners;
 }// End of class
