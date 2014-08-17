@@ -1,4 +1,4 @@
-<project name="AlertsCanada" basedir="." default="main">
+<project name="alerts-canada" basedir="." default="main">
 
     <property name="src.dir"     value="src" />
     <property name="test-src.dir" value="test-src" />
@@ -52,7 +52,7 @@
                 <attribute name="Main-Class" value="${main-class}" />
             </manifest>
         </jar>
-        <jar destfile="${jar.dir}/${ant.project.name}-Test.jar" basedir="${test-classes.dir}">
+        <jar destfile="${jar.dir}/${ant.project.name}-test.jar" basedir="${test-classes.dir}">
             <zipgroupfileset dir="${test-libs.dir}" includes="*.jar" />
             <zipgroupfileset dir="${jar.dir}" includes="*.jar" />
             <manifest>
@@ -65,7 +65,7 @@
         <javadoc sourcepath="${src.dir}" destdir="${docs.dir}" access="private" />
     </target>
     <target name="run" depends="jar">
-        <java jar="${jar.dir}/${ant.project.name}-Test.jar" fork="true" />
+        <java jar="${jar.dir}/${ant.project.name}-test.jar" fork="true" />
     </target>
     <target name="clean-build" depends="clean,jar" />
     <target name="main" depends="clean,docs,run" />
