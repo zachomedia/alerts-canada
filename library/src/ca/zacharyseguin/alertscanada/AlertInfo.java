@@ -410,4 +410,170 @@ public class AlertInfo implements Cloneable, Serializable
     {
         return this.areas;
     }// End of getAreas method
+
+    /**
+     * AlertInfo builder.
+     *
+     * @since 1.0
+     */
+    public static class Builder
+    {
+        /**
+         * The alert info object being constructed.
+         * @since 1.0
+         */
+        private AlertInfo alertInfo;
+
+        /**
+         * Constructs a new AlertInfo.Builder object.
+         * @since 1.0
+         */
+        public Builder()
+        {
+            this.alertInfo = new AlertInfo();
+        }// End of constructor method
+
+        /**
+         * Constructs and returns the AlertInfo object.
+         * @return The constructed AlertInfo object.
+         * @since 1.0
+         */
+        public AlertInfo build()
+        {
+            try
+            {
+                return (AlertInfo)this.alertInfo.clone();
+            }// End of try
+            catch (Exception e)
+            {
+                return null;
+            }// End of catch
+        }// End of build method
+
+        public Builder language(String language)
+        {
+            this.alertInfo.language = language;
+            return this;
+        }// End of language method
+
+        public Builder categories(List<AlertCategory> categories)
+        {
+            this.alertInfo.categories = categories;
+            return this;
+        }// End of categories method
+
+        public Builder event(String event)
+        {
+            this.alertInfo.event = event;
+            return this;
+        }// End of event method
+
+        public Builder responseTypes(List<AlertResponseType> responseTypes)
+        {
+            this.alertInfo.responseTypes = responseTypes;
+            return this;
+        }// End of responseTypes method
+
+        public Builder severity(AlertSeverity severity)
+        {
+            this.alertInfo.severity = severity;
+            return this;
+        }// End of severity method
+
+        public Builder urgency(AlertUrgency urgency)
+        {
+            this.alertInfo.urgency = urgency;
+            return this;
+        }// End of urgency method
+
+        public Builder certainty(AlertCertainty certainty)
+        {
+            this.alertInfo.certainty = certainty;
+            return this;
+        }// End of certainty method
+
+        public Builder audience(String audience)
+        {
+            this.alertInfo.audience = audience;
+            return this;
+        }// End of audience method
+
+        public Builder eventCodes(Map<String, String> eventCodes)
+        {
+            this.alertInfo.eventCodes = eventCodes;
+            return this;
+        }// End of eventCodes method
+
+        public Builder effective(Calendar effective)
+        {
+            this.alertInfo.effective = effective;
+            return this;
+        }// End of effective method
+
+        public Builder onset(Calendar onset)
+        {
+            this.alertInfo.onset = onset;
+            return this;
+        }// End of onset method
+
+        public Builder expires(Calendar expires)
+        {
+            this.alertInfo.expires = expires;
+            return this;
+        }// End of expires method
+
+        public Builder senderName(String senderName)
+        {
+            this.alertInfo.senderName = senderName;
+            return this;
+        }// End of senderName method
+
+        public Builder headline(String headline)
+        {
+            this.alertInfo.headline = headline;
+            return this;
+        }// End of headline method
+
+        public Builder description(String description)
+        {
+            this.alertInfo.description = description;
+            return this;
+        }// End of description method
+
+        public Builder instruction(String instruction)
+        {
+            this.alertInfo.instruction = instruction;
+            return this;
+        }// End of instruction method
+
+        public Builder web(URL web)
+        {
+            this.alertInfo.web = web;
+            return this;
+        }// End of web method
+
+        public Builder contact(String contact)
+        {
+            this.alertInfo.contact = contact;
+            return this;
+        }// End of contact method
+
+        public Builder parameters(Map<String, String> parameters)
+        {
+            this.alertInfo.parameters = parameters;
+            return this;
+        }// End of parameters method
+
+        public Builder resources(List<AlertResource> resources)
+        {
+            this.alertInfo.resources = resources;
+            return this;
+        }// End of resources method
+
+        public Builder areas(List<AlertArea> areas)
+        {
+            this.alertInfo.areas = areas;
+            return this;
+        }// End of areas method
+    }// End of Builder class
 }// End of class
