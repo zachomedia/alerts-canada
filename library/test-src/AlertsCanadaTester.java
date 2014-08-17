@@ -1,4 +1,5 @@
 import ca.zacharyseguin.alertscanada.*;
+import ca.zacharyseguin.util.geo.*;
 
 import java.io.*;
 import java.net.URL;
@@ -11,6 +12,12 @@ public class AlertsCanadaTester
 {
     public static void main (String[] args) throws Exception
     {
+        AlertArea alertArea = new AlertArea.Builder()
+                                            .description("Test Area")
+                                            .circle(new Circle())
+                                            .ceiling(0.0)
+                                            .build();
+
         AlertResource alertResource = new AlertResource.Builder()
                                                         .description("Test Resource")
                                                         .mimeType("text/html")
@@ -41,6 +48,9 @@ public class AlertsCanadaTester
                                             .contact("Zachary Seguin")
                                             .resources(Arrays.asList(new AlertResource[] {
                                                 alertResource
+                                            }))
+                                            .areas(Arrays.asList(new AlertArea[] {
+                                                alertArea
                                             }))
                                             .build();
 
