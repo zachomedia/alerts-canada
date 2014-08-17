@@ -1,7 +1,7 @@
 <project name="AlertsCanada" basedir="." default="main">
 
     <property name="src.dir"     value="src" />
-    <property name="test-src.dir" value="test" />
+    <property name="test-src.dir" value="test-src" />
 
     <property name="build.dir"   value="build" />
     <property name="classes.dir" value="${build.dir}/classes" />
