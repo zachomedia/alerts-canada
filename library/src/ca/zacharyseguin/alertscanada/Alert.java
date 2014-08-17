@@ -332,7 +332,6 @@ public class Alert implements Cloneable, Serializable
             }// End of try
             catch (Exception e)
             {
-                e.printStackTrace();
                 return null;
             }// End of catch
         }// End of build method
