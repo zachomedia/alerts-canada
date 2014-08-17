@@ -42,7 +42,7 @@ public enum AlertCertainty implements AlertEnum
      * Likely (probability greater than approx. 50%).
      * @since 1.0
      */
-    LIKEY("Likely"),
+    LIKELY("Likely"),
 
     /**
      * Possible but not likely (probability less than approx. 50%).
