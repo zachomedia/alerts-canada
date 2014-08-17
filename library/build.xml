@@ -1,26 +1,62 @@
 <project name="AlertsCanada" basedir="." default="main">
 
     <property name="src.dir"     value="src" />
+    <property name="test-src.dir" value="test" />
 
     <property name="build.dir"   value="build" />
     <property name="classes.dir" value="${build.dir}/classes" />
+    <property name="test-classes.dir" value="${build.dir}/test-classes" />
+
+    <property name="libs.dir"    value="libs" />
+    <property name="test-libs.dir" value="test-libs" />
+
     <property name="jar.dir"     value="${build.dir}/jar" />
+
     <property name="docs.dir"    value="docs" />
 
-    <property name="main-class"  value="ca.zacharyseguin.AlertsCanadaTester" />
+    <property name="main-class"  value="" />
+    <property name="test-main-class"  value="AlertsCanadaTester" />
+
+    <path id="libraries">
+        <fileset dir="${libs.dir}">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+    <path id="test-libraries">
+        <fileset dir="${test-libs.dir}">
+            <include name="*.jar" />
+        </fileset>
+    </path>
 
     <target name="clean">
         <delete dir="${build.dir}" />
     </target>
     <target name="compile">
         <mkdir dir="${classes.dir}" />
-        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" />
+        <mkdir dir="${test-classes.dir}" />
+
+        <javac destdir="${classes.dir}" includeantruntime="false">
+            <src path="${src.dir}" />
+            <classpath refid="libraries" />
+        </javac>
+        <javac destdir="${test-classes.dir}" classpath="${classes.dir}" includeantruntime="false">
+            <src path="${test-src.dir}" />
+            <classpath refid="test-libraries" />
+        </javac>
     </target>
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <zipgroupfileset dir="${libs.dir}" includes="*.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="${main-class}" />
+            </manifest>
+        </jar>
+        <jar destfile="${jar.dir}/${ant.project.name}-Test.jar" basedir="${test-classes.dir}">
+            <zipgroupfileset dir="${test-libs.dir}" includes="*.jar" />
+            <zipgroupfileset dir="${jar.dir}" includes="*.jar" />
+            <manifest>
+                <attribute name="Main-Class" value="${test-main-class}" />
             </manifest>
         </jar>
     </target>
@@ -29,7 +65,7 @@
         <javadoc sourcepath="${src.dir}" destdir="${docs.dir}" access="private" />
     </target>
     <target name="run" depends="jar">
-        <java jar="${jar.dir}/${ant.project.name}.jar" fork="true" />
+        <java jar="${jar.dir}/${ant.project.name}-Test.jar" fork="true" />
     </target>
     <target name="clean-build" depends="clean,jar" />
     <target name="main" depends="clean,docs,run" />

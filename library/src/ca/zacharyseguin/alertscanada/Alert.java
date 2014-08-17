@@ -37,7 +37,7 @@ import java.util.List;
  * @version     1.0
  * @since       1.0
  */
-public class Alert implements Serializable
+public class Alert implements Cloneable, Serializable
 {
     /**
      * Identifier of the alert.
@@ -317,5 +317,107 @@ public class Alert implements Serializable
         {
             this.alert = new Alert();
         }// End of constructor method
+
+        /**
+         * Contructs and returns the alert.
+         * @return The constructed alert object.
+         * @since 1.0
+         */
+        public Alert build()
+        {
+            try
+            {
+                return (Alert)this.alert.clone();
+            }// End of try
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                return null;
+            }// End of catch
+        }// End of build method
+
+        public Builder identifier(String identifier)
+        {
+            this.alert.identifier = identifier;
+            return this;
+        }// End of identifier method
+
+        public Builder sender(String sender)
+        {
+            this.alert.sender = sender;
+            return this;
+        }// End of sender method
+
+        public Builder sent(Calendar sent)
+        {
+            this.alert.sent = sent;
+            return this;
+        }// End of sent method
+
+        public Builder status(AlertStatus status)
+        {
+            this.alert.status = status;
+            return this;
+        }// End of status method
+
+        public Builder type(AlertType type)
+        {
+            this.alert.type = type;
+            return this;
+        }// End of type method
+
+        public Builder source(String source)
+        {
+            this.alert.source = source;
+            return this;
+        }// End of source method
+
+        public Builder scope(AlertScope scope)
+        {
+            this.alert.scope = scope;
+            return this;
+        }// End of scope method
+
+        public Builder restriction(String restriction)
+        {
+            this.alert.restriction = restriction;
+            return this;
+        }// End of restriction method
+
+        public Builder addresses(List<String> addresses)
+        {
+            this.alert.addresses = addresses;
+            return this;
+        }// End of addresses method
+
+        public Builder codes(List<String> codes)
+        {
+            this.alert.codes = codes;
+            return this;
+        }// End of codes method
+
+        public Builder note(String note)
+        {
+            this.alert.note = note;
+            return this;
+        }// End of note method
+
+        public Builder references(List<AlertReference> references)
+        {
+            this.alert.references = references;
+            return this;
+        }// End of references method
+
+        public Builder incidents(List<String> incidents)
+        {
+            this.alert.incidents = incidents;
+            return this;
+        }// End of incidents method
+
+        public Builder information(List<AlertInfo> information)
+        {
+            this.alert.information = information;
+            return this;
+        }// End of information method
     }// End of Builder class
 }// End of class
