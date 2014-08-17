@@ -28,8 +28,10 @@ import ca.zacharyseguin.util.geo.Circle;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Alert resource for additional/supplemental information.
@@ -42,6 +44,18 @@ import java.util.Map;
  */
 public class AlertArea implements Serializable
 {
+    /**
+     * Altitude was not provided.
+     * @since 1.0
+     */
+    public static double ALTITUDE_NOT_PROVIDED = Double.MIN_VALUE;
+
+    /**
+     * Ceiling was not proivded.
+     * @since 1.0
+     */
+    public static double CEILING_NOT_PROVIDED = Double.MIN_VALUE;
+
     /**
      * Text describing the affected area.
      * @since 1.0
@@ -80,4 +94,81 @@ public class AlertArea implements Serializable
      * @since 1.0
      */
     private double ceiling;
+
+    /**
+     * Default constructor - Use AlertArea.Builder to construct the AlertArea.
+     * @since 1.0
+     */
+    private AlertArea()
+    {
+        this.description = null;
+        this.polygon = new ArrayList<Coordinate>();
+        this.circle = null;
+        this.geocodes = new TreeMap<String, String>();
+        this.altitude = ALTITUDE_NOT_PROVIDED;
+        this.ceiling = CEILING_NOT_PROVIDED;
+    }// End of constructor
+
+    /**
+     * Returns the description of the affected area.
+     * @return Description of the affected area.
+     * @since 1.0
+     */
+    public String getDescription()
+    {
+        return this.description;
+    }// End of getDescription method
+
+    /**
+     * Returns the polygon describing the affected area.
+     * <br />
+     * If provided, a minimum of 4 points will appear and the first and last points will be the same.
+     *
+     * @return Polygon descriping the affected area.
+     * @since 1.0
+     */
+    public List<Coordinate> getPolygon()
+    {
+        return this.polygon;
+    }// End of getPolygon method
+
+    /**
+     * Return the circle describing the the affected area.
+     * @return The circle describing the affected area.
+     * @since 1.0
+     */
+    public Circle getCircle()
+    {
+        return this.circle;
+    }// End of getCircle method
+
+    /**
+     * Returns the geographic codes describing the affected elements.
+     * @return The geographic codes describing the affected elements.
+     * @since 1.0
+     */
+    public Map<String, String> getGeocodes()
+    {
+        return this.geocodes;
+    }// End of getGeocodes method
+
+    /**
+     * Returns the specific or minimum altitude of the affected area.
+     * @return Specific or minimum altitude of the affected area. Returns {@link ca.zacharyseguin.alertscanada.AlertArea#ALTITUDE_NOT_PROVIDED} if the altitude is not provided.
+     * @since 1.0
+     */
+    public double getAltitude()
+    {
+        return this.altitude;
+    }// End of getAltitude method
+
+    /**
+     * Returns the maximum altitude of the affected area.
+     * @return Maximum altitude of the affected area. Returns {@link ca.zacharyseguin.alertscanada.AlertArea#CEILING_NOT_PROVIDED} if the altitude is not provided.
+     * @since 1.0
+     */
+    public double getCeiling()
+    {
+        return this.ceiling;
+    }// End of getCeiling method
 }// End of class
