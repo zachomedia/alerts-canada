@@ -11,6 +11,12 @@ public class AlertsCanadaTester
 {
     public static void main (String[] args) throws Exception
     {
+        AlertResource alertResource = new AlertResource.Builder()
+                                                        .description("Test Resource")
+                                                        .mimeType("text/html")
+                                                        .uri(new URL("https://zacharyseguin.ca/"))
+                                                        .build();
+
         AlertInfo alertInfo = new AlertInfo.Builder()
                                             .language("en-CA")
                                             .categories(Arrays.asList(new AlertCategory[]{
@@ -33,6 +39,9 @@ public class AlertsCanadaTester
                                             .instruction("TEST ONLY -- NO ACTION REQUIRED")
                                             .web(new URL("https://zacharyseguin.ca/"))
                                             .contact("Zachary Seguin")
+                                            .resources(Arrays.asList(new AlertResource[] {
+                                                alertResource
+                                            }))
                                             .build();
 
         Alert alert = new Alert.Builder()

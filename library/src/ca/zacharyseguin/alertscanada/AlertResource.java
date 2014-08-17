@@ -153,4 +153,72 @@ public class AlertResource implements Cloneable, Serializable
     {
         return this.digest;
     }// End of getDigest method
+
+    /**
+     * Alert Resource builder.
+     * @since 1.0
+     */
+    public static class Builder
+    {
+        /**
+         * The alert resource being constructed.
+         * @since 1.0
+         */
+        private AlertResource alertResource;
+
+        /**
+         * Constructs a new AlertResource.Builder method
+         * @since 1.0
+         */
+        public Builder()
+        {
+            this.alertResource = new AlertResource();
+        }// End of constructor method
+
+        /**
+         * Returns the constructed AlertResource.
+         * @return The constrcuted AlertResource.
+         * @since 1.0
+         */
+        public AlertResource build()
+        {
+            return this.alertResource;
+        }// End of build method
+
+        public Builder description(String description)
+        {
+            this.alertResource.description = description;
+            return this;
+        }// End of description method
+
+        public Builder mimeType(String mimeType)
+        {
+            this.alertResource.mimeType = mimeType;
+            return this;
+        }// End of mimeType method
+
+        public Builder size(int size)
+        {
+            this.alertResource.size = size;
+            return this;
+        }// End of size method
+
+        public Builder uri(URL uri)
+        {
+            this.alertResource.uri = uri;
+            return this;
+        }// End of uri method
+
+        public Builder derefUri(String derefUri)
+        {
+            this.alertResource.derefUri = derefUri;
+            return this;
+        }// End of derefUri method
+
+        public Builder digest(String digest)
+        {
+            this.alertResource.digest = digest;
+            return this;
+        }// End of digest method
+    }// End of Builder class
 }// End of class
