@@ -133,4 +133,189 @@ public class Alert implements Serializable
      * @since 1.0
      */
     private List<AlertInfo> information;
+
+    /**
+     * Default constructor - Construct alert objects using the AlertBuilder.
+     * @since 1.0
+     */
+    private Alert()
+    {
+        this.identifier = null;
+        this.sender = null;
+        this.sent = null;
+        this.status = null;
+        this.type = null;
+        this.source = null;
+        this.scope = null;
+        this.restriction = null;
+        this.addresses = null;
+        this.codes = null;
+        this.note = null;
+        this.references = null;
+        this.incidents = null;
+        this.information = null;
+    }// End of constructor
+
+    /**
+     * Returns the identifier of the alert.
+     * @return The identifier of the alert.
+     * @since 1.0
+     */
+    public String getIdentifier()
+    {
+        return this.identifier;
+    }// End of getIdentifier method
+
+    /**
+     * Returns the identifier of the alert sender.
+     * @return The identifier of the alert sender.
+     * @since 1.0
+     */
+    public String getSender()
+    {
+        return this.identifier;
+    }// End of getSender method
+
+    /**
+     * Returns the date/time the alert was sent.
+     * @return The date/time the alert was sent.
+     * @since 1.0
+     */
+    public Calendar getSent()
+    {
+        return this.sent;
+    }// End of getSent method
+
+    /**
+     * Returns the code denoting the appropriate handling of the alert.
+     * @return The code denoting the appropriate handling of the alert.
+     * @since 1.0
+     */
+    public AlertStatus getStatus()
+    {
+        return this.status;
+    }// End of getStatus method
+
+    /**
+     * Returns the code denoting the nature of the alert.
+     * @return The code denoting the nature of the alert.
+     * @since 1.0
+     */
+    public AlertType getType()
+    {
+        return this.type;
+    }// End of getType method
+
+    /**
+     * Returns the source of the alert.
+     * @return The source of the alert.
+     * @since 1.0
+     */
+    public String getSource()
+    {
+        return this.source;
+    }// End of getSource method
+
+    /**
+     * Returns the code denoting the indented distribution of the alert.
+     * @return The code denoting the indented distribution of the alert.
+     * @since 1.0
+     */
+    public AlertScope getScope()
+    {
+        return this.scope;
+    }// End of getScope method
+
+    /**
+     * Returns the rule for limiting distribution of the alert.
+     * @return The rule for limiting distribution of the alert.
+     * @since 1.0
+     */
+    public String getRestriction()
+    {
+        return this.restriction;
+    }// End of getRestriction method
+
+    /**
+     * Returns the intended recipients of the alert.
+     * @return The intended recipients of the alert.
+     * @since 1.0
+     */
+    public List<String> getAddresses()
+    {
+        return this.addresses;
+    }// End of getAddresses method
+
+    /**
+     * Returns the codes denoting special handling of the alert.
+     * @return The codes denoting special handling of the alert.
+     * @since 1.0
+     */
+    public List<String> getCodes()
+    {
+        return this.codes;
+    }// End of getCodes method
+
+    /**
+     * Returns the purpose or significance of the alert.
+     * @return The purpose or significance of the alert.
+     * @since 1.0
+     */
+    public String getNote()
+    {
+        return this.note;
+    }// End of getNote method
+
+    /**
+     * Returns the references to previous alerts.
+     * @return The references to previous alerts.
+     * @since 1.0
+     */
+    public List<AlertReference> getReferences()
+    {
+        return this.references;
+    }// End of getReferences method
+
+    /**
+     * Returns a list of related incidents.
+     * @return List of related incidents.
+     * @since 1.0
+     */
+    public List<String> getIncidents()
+    {
+        return this.incidents;
+    }// End of getIncidents method
+
+    /**
+     * Returns the alert information.
+     * @return The alert information.
+     * @since 1.0
+     */
+    public List<AlertInfo> getInformation()
+    {
+        return this.information;
+    }// End of getInformation method
+
+    /**
+     * Alert builder.
+     *
+     * @since 1.0
+     */
+    public static class Builder
+    {
+        /**
+         * The alert object being constructed.
+         * @since 1.0
+         */
+        private Alert alert;
+
+        /**
+         * Constructs a new Alert Builder object.
+         * @since 1.0
+         */
+        public Builder()
+        {
+            this.alert = new Alert();
+        }// End of constructor method
+    }// End of Builder class
 }// End of class
