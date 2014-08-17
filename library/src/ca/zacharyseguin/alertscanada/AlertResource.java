@@ -182,7 +182,14 @@ public class AlertResource implements Cloneable, Serializable
          */
         public AlertResource build()
         {
-            return this.alertResource;
+            try
+            {
+                return (AlertResource)this.alertResource.clone();
+            }// End of try
+            catch (Exception e)
+            {
+                return null;
+            }// End of catch
         }// End of build method
 
         public Builder description(String description)
