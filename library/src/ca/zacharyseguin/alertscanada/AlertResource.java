@@ -116,7 +116,7 @@ public class AlertResource implements Cloneable, Serializable
 
     /**
      * Returns the size of the resource.
-     * @return Size of the resource. Returns AlertResource.SIZE_NOT_PROVIDED when size is not provided.
+     * @return Size of the resource. Returns {@link ca.zacharyseguin.alertscanada.AlertResource#SIZE_NOT_PROVIDED} when size is not provided.
      * @since 1.0
      */
     public int getSize()
