@@ -40,9 +40,7 @@ import java.util.Map;
 public class AlertInfo implements Serializable
 {
     /**
-     * Code denoting the language of alert info.
-     * <br />
-     * This field is optional
+     * Code denoting the language of alert info. (Optional)
      *
      * @since 1.0
      */
@@ -61,9 +59,7 @@ public class AlertInfo implements Serializable
     private String event;
 
     /**
-     * Codes denoting the type of action recommended for the target audience.
-     * <br />
-     * This field is optional.
+     * Codes denoting the type of action recommended for the target audience. (Optional)
      * @since 1.0
      */
     private List<AlertResponseType> responseTypes;
@@ -87,88 +83,100 @@ public class AlertInfo implements Serializable
     private AlertCertainty certainty;
 
     /**
-     * Text describing the audience of the alert.
-     * <br />
-     * This field is optional.
+     * Text describing the audience of the alert. (Optional)
      *
      * @since 1.0
      */
     private String audience;
 
     /**
-     * System-specific event codes identifying the type of alert message.
-     * <br />
-     * (ValueName, Value)
+     * System-specific event codes identifying the type of alert message. (ValueName, Value)
      *
      * @since 1.0
      */
     private Map<String, String> eventCodes;
 
     /**
-     * Effective time of the alert message.
-     * <br />
-     * This field is optional.
+     * Effective time of the alert message. (Optional)
      *
      * @since 1.0
      */
     private Calendar effective;
 
     /**
-     * The expected time of the beginning of the event of the alert.
-     * <br />
-     * This field is optional.
+     * The expected time of the beginning of the event of the alert. (Optional)
      *
      * @since 1.0
      */
     private Calendar onset;
 
     /**
-     * The expiry time of the alert message.
-     * <br />
-     * This field is optional.
+     * The expiry time of the alert message. (Optional)
      *
      * @since 1.0
      */
     private Calendar expires;
 
     /**
-     * Name of the agency/authority sending the alert.
-     * <br />
-     * This field is optional.
+     * Name of the agency/authority sending the alert. (Optional)
      *
      * @since 1.0
      */
     private String senderName;
 
     /**
-     * Headling of the event of the alert.
-     * <br />
-     * This field is optional.
+     * Headling of the event of the alert. (Optional)
      *
      * @since 1.0
      */
     private String headline;
 
     /**
-     * Text describing the event of the alert.
-     * <br />
-     * This field is optional.
+     * Text describing the event of the alert. (Optional)
      *
      * @since 1.0
      */
     private String description;
 
     /**
-     * Text describing the recommended action to be taken by the recipients of the alert.
-     * <br />
-     * This field is optional.
+     * Text describing the recommended action to be taken by the recipients of the alert. (Optional)
      *
      * @since 1.0
      */
     private String instruction;
+
+    /**
+     * Hyperlink to additional information. (Optional)
+     *
+     * @since 1.0
+     */
     private URL web;
+
+    /**
+     * Text describing the contact for follow-up and confirmation of the alert message. (Optional)
+     *
+     * @since 1.0
+     */
     private String contact;
+
+    /**
+     * System-specific additional parameters associated with the alert. (ValueName, Value) (Optional)
+     *
+     * @since 1.0
+     */
     private Map<String, String> parameters;
+
+    /**
+     * Files with additional/supplemental information. (Optional)
+     *
+     * @since 1.0
+     */
     private List<AlertResource> resources;
+
+    /**
+     * Area for which the alert is effective. (Optional)
+     *
+     * @since 1.0
+     */
     private List<AlertArea> areas;
 }// End of class

@@ -70,9 +70,8 @@ public class Alert implements Serializable
     private AlertType type;
 
     /**
-     * Source of the alert.
-     * <br />
-     * This field is optional.
+     * Source of the alert. (Optional)
+     * @since 1.0
      */
     private String source;
 
@@ -83,7 +82,7 @@ public class Alert implements Serializable
     private AlertScope scope;
 
     /**
-     * Rule for limiting the distribution of restricted alerts.
+     * Rule for limiting the distribution of restricted alerts. (Optional)
      * <br />
      * This field is only required when scope is {@link ca.zacharyseguin.alertscanada.AlertScope#RESTRICTED}
      *
@@ -92,7 +91,7 @@ public class Alert implements Serializable
     private String restriction;
 
     /**
-     * Listing of intended recipients of the alert.
+     * Listing of intended recipients of the alert. (Optional)
      * <br />
      * Required when scope is {@link ca.zacharyseguin.alertscanada.AlertScope#PRIVATE}, optional otherwise.
      *
@@ -101,36 +100,28 @@ public class Alert implements Serializable
     private List<String> addresses;
 
     /**
-     * Codes denoting special handling of the alert.
-     * <br />
-     * This field is optional.
+     * Codes denoting special handling of the alert. (Optional)
      *
      * @since 1.0
      */
     private List<String> codes;
 
     /**
-     * Text describing the purpose or significance of the alert.
-     * <br />
-     * This field is optional.
+     * Text describing the purpose or significance of the alert. (Optional)
      *
      * @since 1.0
      */
     private String note;
 
     /**
-     * References to previous alerts.
-     * <br />
-     * This field is optional.
+     * References to previous alerts. (Optional)
      *
      * @since 1.0
      */
     private List<AlertReference> references;
 
     /**
-     * Listing of reference incidents of the alert.
-     * <br />
-     * This field is optional.
+     * Listing of reference incidents of the alert. (Optional)
      *
      * @since 1.0
      */

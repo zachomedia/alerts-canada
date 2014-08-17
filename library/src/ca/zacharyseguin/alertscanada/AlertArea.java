@@ -23,8 +23,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package ca.zacharyseguin.alertscanada;
 
+import ca.zacharyseguin.util.geo.Coordinate;
+import ca.zacharyseguin.util.geo.Circle;
+
 import java.io.Serializable;
-import java.net.URL;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Alert resource for additional/supplemental information.
@@ -35,42 +40,44 @@ import java.net.URL;
  * @version     1.0
  * @since       1.0
  */
-public class AlertResource implements Serializable
+public class AlertArea implements Serializable
 {
     /**
-     * Text describing the type and contents of the resource file.
+     * Text describing the affected area.
      * @since 1.0
      */
     private String description;
 
     /**
-     * MIME content type of the resource.
-     * @since 1.0
-     */
-    private String mimeType;
-
-    /**
-     * Size of the resource in bytes. (Optional)
+     * Points defining a polygon that delineates the affected area. (Optional)
+     * <br />
+     * A minimum of 4 coordinate pairs will appear, with the first and last coordinates will be the same.
      *
      * @since 1.0
      */
-    private int size;
+    private List<Coordinate> polygon;
 
     /**
-     * Hyperlink to the resource file. (Optional)
+     * Circle defining the affected area. (Optional)
      * @since 1.0
      */
-    private URL uri;
+    private Circle circle;
 
     /**
-     * BASE64 encoded data of the resource. (Optional)
+     * Geographic codes representing the affected area. (ValueName, Value) (Optional)
      * @since 1.0
      */
-    private String derefUri;
+    private Map<String, String> geocodes;
 
     /**
-     * Digital digest ("hash") computed of the resource. (Optional)
+     * Specific or minimum altitude area of the affected area. (Optional)
      * @since 1.0
      */
-    private String digest;
+    private double altitude;
+
+    /**
+     * Maximum altitude of the affected area. (Optional)
+     * @since 1.0
+     */
+    private double ceiling;
 }// End of class
