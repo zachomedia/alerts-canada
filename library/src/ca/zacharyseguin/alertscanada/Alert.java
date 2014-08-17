@@ -25,6 +25,7 @@ package ca.zacharyseguin.alertscanada;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -135,7 +136,7 @@ public class Alert implements Cloneable, Serializable
     private List<AlertInfo> information;
 
     /**
-     * Default constructor - Construct alert objects using the AlertBuilder.
+     * Default constructor - Construct alert objects using the Alert.Builder.
      * @since 1.0
      */
     private Alert()
@@ -148,12 +149,12 @@ public class Alert implements Cloneable, Serializable
         this.source = null;
         this.scope = null;
         this.restriction = null;
-        this.addresses = null;
-        this.codes = null;
+        this.addresses = new ArrayList<String>();
+        this.codes = new ArrayList<String>();
         this.note = null;
-        this.references = null;
-        this.incidents = null;
-        this.information = null;
+        this.references = new ArrayList<AlertReference>();
+        this.incidents = new ArrayList<String>();
+        this.information = new ArrayList<AlertInfo>();
     }// End of constructor
 
     /**
