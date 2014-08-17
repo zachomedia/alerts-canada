@@ -38,12 +38,6 @@ import java.net.URL;
 public class AlertResource implements Cloneable, Serializable
 {
     /**
-     * Size was not provided.
-     * @since 1.0
-     */
-    public static int SIZE_NOT_PROVIDED = -1;
-
-    /**
      * Text describing the type and contents of the resource file.
      * @since 1.0
      */
@@ -60,7 +54,7 @@ public class AlertResource implements Cloneable, Serializable
      *
      * @since 1.0
      */
-    private int size;
+    private Integer size;
 
     /**
      * Hyperlink to the resource file. (Optional)
@@ -88,7 +82,7 @@ public class AlertResource implements Cloneable, Serializable
     {
         this.description = null;
         this.mimeType = null;
-        this.size = SIZE_NOT_PROVIDED;
+        this.size = null;
         this.uri = null;
         this.derefUri = null;
         this.digest = null;
@@ -116,10 +110,10 @@ public class AlertResource implements Cloneable, Serializable
 
     /**
      * Returns the size of the resource.
-     * @return Size of the resource. Returns {@link ca.zacharyseguin.alertscanada.AlertResource#SIZE_NOT_PROVIDED} when size is not provided.
+     * @return Size of the resource.
      * @since 1.0
      */
-    public int getSize()
+    public Integer getSize()
     {
         return this.size;
     }// End of getSize method
@@ -205,6 +199,12 @@ public class AlertResource implements Cloneable, Serializable
         }// End of mimeType method
 
         public Builder size(int size)
+        {
+            this.alertResource.size = Integer.valueOf(size);
+            return this;
+        }// End of size method
+
+        public Builder size(Integer size)
         {
             this.alertResource.size = size;
             return this;
