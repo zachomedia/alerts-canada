@@ -46,7 +46,7 @@ public enum AlertResponseType implements AlertEnum
 
     /**
      * Make preparations per the instructions.
-     * @sicne 1.0
+     * @since 1.0
      */
     PREPARE("Prepare"),
 
