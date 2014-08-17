@@ -1,5 +1,7 @@
 # Alerts Canada
 
+**This set of components is still in the early stages of development.**
+
 A set of components to receive, process and display alerts issued through the National [National Alert Aggregation & Dissemination System](https://alerts.pelmorex.com).
 
 The most common alerts issued through this system are weather alerts issued by [Environment Canada](http://ec.gc.ca). Other public safety agencies in Canada have the authority to issue alerts through the system.
