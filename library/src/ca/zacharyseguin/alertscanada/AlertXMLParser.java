@@ -61,13 +61,13 @@ class AlertXMLParser
      *
      * @since 1.0
      */
-    private static <E extends Enum<E> & AlertEnum> AlertEnum getEnum(Class<? extends AlertEnum> enumType, Object parent, String path)
+    private static <T extends Enum<T> & AlertEnum> T getEnum(Class<T> enumType, Object parent, String path)
     {
         try
         {
             String value = getNodeValue(parent, path);
 
-            for (AlertEnum ae : (AlertEnum[]) enumType.getDeclaredMethod("values").invoke(null))
+            for (T ae : (T[]) enumType.getDeclaredMethod("values").invoke(null))
             {
                 if (value.equals(ae.getValue()))
                 {
@@ -197,10 +197,10 @@ class AlertXMLParser
                 .identifier(getNodeValue(root, "identifier"))
                 .sender(getNodeValue(root, "sender"))
                 .sent(getCalendarValue(root, "sent"))
-                .status((AlertStatus)getEnum(AlertStatus.class, root, "status"))
-                .type((AlertType)getEnum(AlertType.class, root, "msgType"))
+                .status(getEnum(AlertStatus.class, root, "status"))
+                .type(getEnum(AlertType.class, root, "msgType"))
                 .source(getNodeValue(root, "source"))
-                .scope((AlertScope)getEnum(AlertScope.class, root, "scope"))
+                .scope(getEnum(AlertScope.class, root, "scope"))
                 .restriction(getNodeValue(root, "restriction"))
                 .addresses(getNodeValues(root, "addresses"))
                 .codes(getNodeValues(root, "code"))
