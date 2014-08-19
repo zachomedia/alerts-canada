@@ -164,7 +164,7 @@ public class AlertArea implements Cloneable, Serializable
      * Alert Area builder.
      * @since 1.0
      */
-    public static class Builder
+    static class Builder
     {
         /**
          * The alert area being constructed.

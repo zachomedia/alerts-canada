@@ -152,7 +152,7 @@ public class AlertResource implements Cloneable, Serializable
      * Alert Resource builder.
      * @since 1.0
      */
-    public static class Builder
+    static class Builder
     {
         /**
          * The alert resource being constructed.

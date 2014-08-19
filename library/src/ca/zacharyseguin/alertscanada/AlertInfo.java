@@ -416,7 +416,7 @@ public class AlertInfo implements Cloneable, Serializable
      *
      * @since 1.0
      */
-    public static class Builder
+    static class Builder
     {
         /**
          * The alert info object being constructed.
