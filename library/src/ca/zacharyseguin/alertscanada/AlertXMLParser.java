@@ -336,6 +336,16 @@ class AlertXMLParser
         return values;
     }// End of getStrings method
 
+    /**
+     * Returns a the circles defining the alert area.
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path The XPath path for the matching elements.
+     *
+     * @return Circles describing the area of an alert.
+     *
+     * @since 1.0
+     */
     private static List<Circle> getCircles(Object parent, String path)
     {
         List<Circle> circles = new ArrayList<Circle>();
@@ -371,6 +381,16 @@ class AlertXMLParser
         return circles;
     }// End of getCircles method
 
+    /**
+     * Returns a the polygons defining the alert area.
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path The XPath path for the matching elements.
+     *
+     * @return Polygons describing the area of an alert.
+     *
+     * @since 1.0
+     */
     private static List<Polygon> getPolygons(Object parent, String path)
     {
         List<Polygon> polygons = new ArrayList<Polygon>();
