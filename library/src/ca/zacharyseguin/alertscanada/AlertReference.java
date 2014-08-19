@@ -34,7 +34,7 @@ import java.util.Calendar;
  * @version     1.0
  * @since       1.0
  */
-public class AlertReference implements Serializable
+public class AlertReference implements Cloneable, Serializable
 {
     /**
      * Sender of the referenced alert.
@@ -53,4 +53,102 @@ public class AlertReference implements Serializable
      * @since 1.0
      */
     private Calendar sent;
+
+    /**
+     * Default constructor - Use AlertReference.Builder to construct a new object.
+     * @since 1.0
+     */
+    private AlertReference()
+    {
+        this.sender = null;
+        this.identifier = null;
+        this.sent = null;
+    }// End of constructor method
+
+    /**
+     * Returns the sender of the referenced alert.
+     * @return Sender of the reference alert.
+     * @since 1.0
+     */
+    public String getSender()
+    {
+        return this.sender;
+    }// End of getSender method
+
+    /**
+     * Returns the identifier of the referenced alert.
+     * @return Identifier of the reference alert.
+     * @since 1.0
+     */
+    public String getIdentifier()
+    {
+        return this.identifier;
+    }// End of getIdentifier method
+
+    /**
+     * Returns the time the referenced alert was sent.
+     * @return Time the referenced alert was sent.
+     * @since 1.0
+     */
+    public Calendar getSent()
+    {
+        return this.sent;
+    }// End of getSent method
+
+    /**
+     * Alert Reference builder.
+     * @since 1.0
+     */
+    static class Builder
+    {
+        /**
+         * The AlertReference object being constructed.
+         * @since 1.0
+         */
+        private AlertReference reference;
+
+        /**
+         * Constructs a new AlertReference.Builder object.
+         * @since 1.0
+         */
+        public Builder()
+        {
+            this.reference = new AlertReference();
+        }// End of constructor class
+
+        /**
+         * Constructs and returns the AlertReference object.
+         * @return The constructed AlertReference object.
+         * @since 1.0
+         */
+        public AlertReference build()
+        {
+            try
+            {
+                return (AlertReference)this.reference.clone();
+            }// End of try
+            catch (Exception e)
+            {
+                return null;
+            }// End of catch
+        }// End of build method
+
+        public Builder sender(String sender)
+        {
+            this.reference.sender = sender;
+            return this;
+        }// End of sender method
+
+        public Builder identifier(String identifier)
+        {
+            this.reference.identifier = identifier;
+            return this;
+        }// End of identifier method
+
+        public Builder sent(Calendar sent)
+        {
+            this.reference.sent = sent;
+            return this;
+        }// End of sent method
+    }// End of Builder class
 }// End of class
