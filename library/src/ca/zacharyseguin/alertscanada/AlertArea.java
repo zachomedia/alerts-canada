@@ -146,7 +146,7 @@ public class AlertArea implements Cloneable, Serializable
      * @return Specific or minimum altitude of the affected area.
      * @since 1.0
      */
-    public double getAltitude()
+    public Double getAltitude()
     {
         return this.altitude;
     }// End of getAltitude method
@@ -156,7 +156,7 @@ public class AlertArea implements Cloneable, Serializable
      * @return Maximum altitude of the affected area.
      * @since 1.0
      */
-    public double getCeiling()
+    public Double getCeiling()
     {
         return this.ceiling;
     }// End of getCeiling method

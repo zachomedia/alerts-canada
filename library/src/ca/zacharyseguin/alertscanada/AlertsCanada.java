@@ -88,6 +88,7 @@ public class AlertsCanada
         this.alertsListeners = new ArrayList<AlertsListener>();
 
         StreamListener listener = new StreamListener(NAAD_HOSTNAME_OAKVILLE, NAAD_PORT);
+        listener.start();
     }
 
     public List<Alert> getAlerts()
@@ -225,16 +226,45 @@ public class AlertsCanada
         this.alertsListeners.add(listener);
     }
 
-    public class StreamListener
+    public class StreamListener extends Thread
     {
         private Socket socket;
+        private String hostname;
+        private int port;
 
         public StreamListener(String hostname, int port) throws UnknownHostException, IOException
         {
-            this.socket = new Socket(hostname, port);
-            SocketInputStreamListener listener = new SocketInputStreamListener(this.socket.getInputStream());
-            listener.start();
+            this.hostname = hostname;
+            this.port = port;
         }// End of constructor method
+
+        public void run()
+        {
+            while(true)
+            {
+                try
+                {
+                    this.socket = new Socket(hostname, port);
+                    this.socket.setSoTimeout(80 * 1000); // 80 seconds
+                    SocketInputStreamListener listener = new SocketInputStreamListener(this.socket.getInputStream());
+                    listener.start();
+                    listener.join();
+                }// End of try
+                catch (Exception e)
+                {
+                    // Some error occured.
+                    // Let's wait a minute and try again
+                    try
+                    {
+                        Thread.sleep(60 * 1000);
+                    }// End of try
+                    catch (Exception ex)
+                    {
+                        // Do nothing, there is really nothing that can be done about it :(
+                    }// End of catch
+                }// End of catch
+            }// End of while
+        }// End of run method
 
         public class SocketInputStreamListener extends Thread
         {
@@ -247,7 +277,6 @@ public class AlertsCanada
 
             public void run()
             {
-                int failures = 0;
                 BufferedReader reader = new BufferedReader(new InputStreamReader(this.inputStream));
                 String content = "";
 
@@ -268,16 +297,11 @@ public class AlertsCanada
                             parseAlert(content);
                             content = "";
                         }// End of if
-                        failures = 0;
                     }// End of try
                     catch (Exception e)
                     {
                         content = "";
-                        ++failures;
-                        if (failures >= 3)
-                        {
-                            break;
-                        }// End of if
+                        break;
                     }// End of catch
                 }// End of while
             }// End of run method

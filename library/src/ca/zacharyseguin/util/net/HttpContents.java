@@ -57,11 +57,14 @@ public class HttpContents
                 contents += (char)c;
             }// End of while
 
+            reader.close();
             return contents;
         }// End of try
         catch (Exception e)
         {
-            e.printStackTrace();
+            // An error occured
+            // Right now, ignore it.
+            
             return null;
         }// End of catch
     }// End of getURLContents method
