@@ -32,7 +32,7 @@ import java.io.Serializable;
  * @version     1.0
  * @since       1.0
  */
-public class Coordinate implements Serializable
+public class Coordinate implements Cloneable, Serializable
 {
     /**
      * Latitude component of the coordinate.

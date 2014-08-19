@@ -25,6 +25,7 @@ package ca.zacharyseguin.alertscanada;
 
 import ca.zacharyseguin.util.geo.Coordinate;
 import ca.zacharyseguin.util.geo.Circle;
+import ca.zacharyseguin.util.geo.Polygon;
 
 import java.io.Serializable;
 
@@ -51,19 +52,19 @@ public class AlertArea implements Cloneable, Serializable
     private String description;
 
     /**
-     * Points defining a polygon that delineates the affected area. (Optional)
+     * Points defining the polygons that delineates the affected area. (Optional)
      * <br />
      * A minimum of 4 coordinate pairs will appear, with the first and last coordinates will be the same.
      *
      * @since 1.0
      */
-    private List<Coordinate> polygon;
+    private List<Polygon> polygons;
 
     /**
-     * Circle defining the affected area. (Optional)
+     * Circles defining the affected area. (Optional)
      * @since 1.0
      */
-    private Circle circle;
+    private List<Circle> circles;
 
     /**
      * Geographic codes representing the affected area. (ValueName, Value) (Optional)
@@ -90,8 +91,8 @@ public class AlertArea implements Cloneable, Serializable
     private AlertArea()
     {
         this.description = null;
-        this.polygon = new ArrayList<Coordinate>();
-        this.circle = null;
+        this.polygons = new ArrayList<Polygon>();
+        this.circles = new ArrayList<Circle>();
         this.geocodes = new TreeMap<String, String>();
         this.altitude = null;
         this.ceiling = null;
@@ -108,27 +109,27 @@ public class AlertArea implements Cloneable, Serializable
     }// End of getDescription method
 
     /**
-     * Returns the polygon describing the affected area.
+     * Returns the polygons describing the affected area.
      * <br />
      * If provided, a minimum of 4 points will appear and the first and last points will be the same.
      *
-     * @return Polygon descriping the affected area.
+     * @return Polygons descriping the affected area.
      * @since 1.0
      */
-    public List<Coordinate> getPolygon()
+    public List<Polygon> getPolygons()
     {
-        return this.polygon;
-    }// End of getPolygon method
+        return this.polygons;
+    }// End of getPolygons method
 
     /**
-     * Return the circle describing the the affected area.
-     * @return The circle describing the affected area.
+     * Return the circles describing the the affected area.
+     * @return The circles describing the affected area.
      * @since 1.0
      */
-    public Circle getCircle()
+    public List<Circle> getCircles()
     {
-        return this.circle;
-    }// End of getCircle method
+        return this.circles;
+    }// End of getCircles method
 
     /**
      * Returns the geographic codes describing the affected elements.
@@ -204,19 +205,19 @@ public class AlertArea implements Cloneable, Serializable
             return this;
         }// End of description method
 
-        public Builder poloygon(List<Coordinate> polygon)
+        public Builder polygons(List<Polygon> polygons)
         {
-            this.alertArea.polygon = polygon;
+            this.alertArea.polygons = polygons;
             return this;
-        }// End of polygon method
+        }// End of polygons method
 
-        public Builder circle(Circle circle)
+        public Builder circles(List<Circle> circles)
         {
-            this.alertArea.circle = circle;
+            this.alertArea.circles = circles;
             return this;
-        }// End of circle method
+        }// End of circles method
 
-        public Builder goecodes(Map<String, String> geocodes)
+        public Builder geocodes(Map<String, String> geocodes)
         {
             this.alertArea.geocodes = geocodes;
             return this;
@@ -234,7 +235,7 @@ public class AlertArea implements Cloneable, Serializable
             return this;
         }// End of ceiling method
 
-        public Builder altitide(Double altitude)
+        public Builder altitude(Double altitude)
         {
             this.alertArea.altitude = altitude;
             return this;

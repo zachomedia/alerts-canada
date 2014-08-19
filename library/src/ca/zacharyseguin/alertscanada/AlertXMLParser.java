@@ -23,6 +23,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package ca.zacharyseguin.alertscanada;
 
+import ca.zacharyseguin.util.geo.Circle;
+import ca.zacharyseguin.util.geo.Coordinate;
+import ca.zacharyseguin.util.geo.Polygon;
+
 import ca.zacharyseguin.util.xml.XMLHelpers;
 
 import java.net.URL;
@@ -170,6 +174,16 @@ class AlertXMLParser
         return parseCalendar(getString(parent, path));
     }// End of getCalendar method
 
+    /**
+     * Returns the URL value of an element.
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path The XPath path for the matching element.
+     *
+     * @return UR value if value is provided and correct, <code>null</code> otherwise.
+     *
+     * @since 1.0
+     */
     private static URL getURL(Object parent, String path)
     {
         try
@@ -185,6 +199,16 @@ class AlertXMLParser
         return null;
     }// End of getURL method
 
+    /**
+     * Returns a key, value set.
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path The XPath path for the matching elements.
+     *
+     * @return Map of key, value set.
+     *
+     * @since 1.0
+     */
     private static Map<String, String> getKeyValue(Object parent, String path)
     {
         Map<String, String> pairs = new TreeMap<String, String>();
@@ -210,6 +234,35 @@ class AlertXMLParser
     }// End of getKeyValue method
 
     /**
+     * Returns the Double value of a single node.
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path THe XPath path for the matching element.
+     *
+     * @return The Double of the element.
+     *
+     * @since 1.0
+     */
+    private static Double getDouble(Object parent, String path)
+    {
+        Node node = XMLHelpers.getNode(parent, path);
+
+        if (node == null) return null;
+
+        try
+        {
+            return new Double(node.getTextContent());
+        }// End of try
+        catch (Exception e)
+        {
+            // An error occured.
+            // Right now, nothing happens.
+        }// End of catch
+
+        return null;
+    }// End of getDouble method
+
+    /**
      * Returns the value of a single node.
      *
      * @param parent The parent object, for the XPath search.
@@ -226,7 +279,7 @@ class AlertXMLParser
         if (node == null) return null;
 
         return node.getTextContent();
-    }// End of getNode method
+    }// End of getString method
 
     /**
      * Returns a List of node values.
@@ -254,40 +307,120 @@ class AlertXMLParser
         return values;
     }// End of getStrings method
 
+    private static List<Circle> getCircles(Object parent, String path)
+    {
+        List<Circle> circles = new ArrayList<Circle>();
+
+        NodeList nodes = XMLHelpers.getNodes(parent, path);
+
+        for (int x = 0; x < nodes.getLength(); ++x)
+        {
+            Node node = nodes.item(x);
+            String value = node.getTextContent();
+
+            if (value == null) return null;
+
+            String[] components = value.split("\\s");
+
+            if (components.length != 2) continue;
+
+            String[] coordinateComponents = components[0].split(",");
+
+            if (coordinateComponents.length != 2) continue;
+
+            try
+            {
+                circles.add(new Circle(new Coordinate(Double.parseDouble(coordinateComponents[0]), Double.parseDouble(coordinateComponents[1])), Double.parseDouble(components[1])));
+            }// End of catch
+            catch (Exception e)
+            {
+                // An error occured.
+                // For now, nothing will happen.
+            }// End of try
+        }// End of for
+
+        return circles;
+    }// End of getCircles method
+
+    private static List<Polygon> getPolygons(Object parent, String path)
+    {
+        List<Polygon> polygons = new ArrayList<Polygon>();
+
+        NodeList nodes = XMLHelpers.getNodes(parent, path);
+
+        for (int x = 0; x < nodes.getLength(); ++x)
+        {
+            Node node = nodes.item(x);
+            String value = node.getTextContent();
+            List<Coordinate> coordinates = new ArrayList<Coordinate>();
+
+            if (value == null) return null;
+
+            String[] pairs = value.split("\\s");
+
+            for (String pair : pairs)
+            {
+                String[] components = pair.split(",");
+
+                if (components.length != 2) continue;
+
+                try
+                {
+                    coordinates.add(new Coordinate(Double.parseDouble(components[0]), Double.parseDouble(components[1])));
+                }// End of try
+                catch (Exception e)
+                {
+                    // Faild to parse
+                    // That's fine, we'll move on.
+                }// End of catch
+            }// End of for
+
+            polygons.add(new Polygon(coordinates));
+        }// End of for
+
+        return polygons;
+    }// End of getPolygons method
+
     /**
-     * Return the references of the alert.
+     * Returns the Areas of alert information (event).
      *
      * @param parent The parent object, for the XPath search.
      * @param path The XPath path for the matching elements.
      *
-     * @return The references of the alert.
+     * @return Areas of the alert event.
      *
      * @since 1.0
      */
-    private static List<AlertReference> getReferences(Object parent, String path)
+    private static List<AlertArea> getAreas(Object parent, String path)
     {
-        List<AlertReference> references = new ArrayList<AlertReference>();
-        String rawReferences = getString(parent, path);
+        List<AlertArea> areas = new ArrayList<AlertArea>();
 
-        if (rawReferences == null) return references;
-
-        String[] seperatedRawReferences = rawReferences.split("\\s");
-
-        for (String rawReference : seperatedRawReferences)
+        try
         {
-            String[] referenceComponents = rawReference.split(",");
+            NodeList nodes = XMLHelpers.getNodes(parent, path);
 
-            if (referenceComponents.length != 3) continue;
+            for (int x = 0; x < nodes.getLength(); ++x)
+            {
+                Node node = nodes.item(x);
 
-            references.add(new AlertReference.Builder()
-                                                .sender(referenceComponents[0])
-                                                .identifier(referenceComponents[1])
-                                                .sent(parseCalendar(referenceComponents[2]))
-                                                .build());
-        }// End of for
+                areas.add(new AlertArea.Builder()
+                                            .description(getString(node, "areaDesc"))
+                                            .polygons(getPolygons(node, "polygon"))
+                                            .circles(getCircles(node, "circle"))
+                                            .geocodes(getKeyValue(node, "geocode"))
+                                            .altitude(getDouble(node, "altitude"))
+                                            .ceiling(getDouble(node, "ceiling"))
+                                            .build());
+            }// End of for
+        }// End of catch
+        catch (Exception e)
+        {
+            // An error occured.
+            // Just return what we have so far.
+        }// End of catch
 
-        return references;
-    }// End of getReferences method
+        return areas;
+    }// End of getAreas method
 
     /**
      * Return the information objects of the alert.
@@ -332,17 +465,53 @@ class AlertXMLParser
                                         .contact(getString(node, "contact"))
                                         .parameters(getKeyValue(node, "parameter"))
                                         //.resources(getResources(node, "resource"))
-                                        //.areas(getAreas(node, "area"))
+                                        .areas(getAreas(node, "area"))
                                         .build());
             }// End of for
         }// End of catch
         catch (Exception e)
         {
-            return info;
+            // An error occured.
+            // Just return what we have so far.
         }// End of catch
 
         return info;
     }// End of getInformation method
+
+    /**
+     * Return the references of the alert.
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path The XPath path for the matching elements.
+     *
+     * @return The references of the alert.
+     *
+     * @since 1.0
+     */
+    private static List<AlertReference> getReferences(Object parent, String path)
+    {
+        List<AlertReference> references = new ArrayList<AlertReference>();
+        String rawReferences = getString(parent, path);
+
+        if (rawReferences == null) return references;
+
+        String[] seperatedRawReferences = rawReferences.split("\\s");
+
+        for (String rawReference : seperatedRawReferences)
+        {
+            String[] referenceComponents = rawReference.split(",");
+
+            if (referenceComponents.length != 3) continue;
+
+            references.add(new AlertReference.Builder()
+                                                .sender(referenceComponents[0])
+                                                .identifier(referenceComponents[1])
+                                                .sent(parseCalendar(referenceComponents[2]))
+                                                .build());
+        }// End of for
+
+        return references;
+    }// End of getReferences method
 
     /**
      * Parses the provided XML text into an Alert object.

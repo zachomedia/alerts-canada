@@ -32,7 +32,7 @@ import java.io.Serializable;
  * @version     1.0
  * @since       1.0
  */
-public class Circle implements Serializable
+public class Circle implements Cloneable, Serializable
 {
     /**
      * Coordinate of the center of the circle.
