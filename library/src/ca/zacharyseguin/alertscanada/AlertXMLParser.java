@@ -263,6 +263,35 @@ class AlertXMLParser
     }// End of getDouble method
 
     /**
+     * Returns the Integer value of a single node.
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path THe XPath path for the matching element.
+     *
+     * @return The Integer of the element.
+     *
+     * @since 1.0
+     */
+    private static Integer getInteger(Object parent, String path)
+    {
+        Node node = XMLHelpers.getNode(parent, path);
+
+        if (node == null) return null;
+
+        try
+        {
+            return new Integer(node.getTextContent());
+        }// End of try
+        catch (Exception e)
+        {
+            // An error occured.
+            // Right now, nothing happens.
+        }// End of catch
+
+        return null;
+    }// End of Integer method
+
+    /**
      * Returns the value of a single node.
      *
      * @param parent The parent object, for the XPath search.
@@ -382,6 +411,47 @@ class AlertXMLParser
     }// End of getPolygons method
 
     /**
+     * Returns the resources of alert information (event).
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path The XPath path for the matching elements.
+     *
+     * @return Resources of the alert event.
+     *
+     * @since 1.0
+     */
+    private static List<AlertResource> getResources(Object parent, String path)
+    {
+        List<AlertResource> resources = new ArrayList<AlertResource>();
+
+        try
+        {
+            NodeList nodes = XMLHelpers.getNodes(parent, path);
+
+            for (int x = 0; x < nodes.getLength(); ++x)
+            {
+                Node node = nodes.item(x);
+
+                resources.add(new AlertResource.Builder()
+                                                    .description(getString(node, "resourceDesc"))
+                                                    .mimeType(getString(node, "mimeType"))
+                                                    .size(getInteger(node, "size"))
+                                                    .uri(getURL(node, "uri"))
+                                                    .derefUri(getString(node, "derefUri"))
+                                                    .digest(getString(node, "digest"))
+                                                    .build());
+            }// End of for
+        }// End of catch
+        catch (Exception e)
+        {
+            // An error occured.
+            // Just return what we have so far.
+        }// End of catch
+
+        return resources;
+    }// End of getResources method
+
+    /**
      * Returns the Areas of alert information (event).
      *
      * @param parent The parent object, for the XPath search.
@@ -464,7 +534,7 @@ class AlertXMLParser
                                         .web(getURL(node, "web"))
                                         .contact(getString(node, "contact"))
                                         .parameters(getKeyValue(node, "parameter"))
-                                        //.resources(getResources(node, "resource"))
+                                        .resources(getResources(node, "resource"))
                                         .areas(getAreas(node, "area"))
                                         .build());
             }// End of for
