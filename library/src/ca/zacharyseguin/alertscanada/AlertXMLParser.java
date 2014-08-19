@@ -25,6 +25,8 @@ package ca.zacharyseguin.alertscanada;
 
 import ca.zacharyseguin.util.xml.XMLHelpers;
 
+import java.net.URL;
+
 import java.util.*;
 
 import java.text.SimpleDateFormat;
@@ -163,10 +165,49 @@ class AlertXMLParser
      *
      * @since 1.0
      */
-    private static Calendar getCalendar(Object parent, String path) throws Exception
+    private static Calendar getCalendar(Object parent, String path)
     {
         return parseCalendar(getString(parent, path));
     }// End of getCalendar method
+
+    private static URL getURL(Object parent, String path)
+    {
+        try
+        {
+            return new URL(getString(parent, path));
+        }// End of try
+        catch (Exception e)
+        {
+            // An error occured.
+            // Right now, nothing is done about it.
+        }// End of catch
+
+        return null;
+    }// End of getURL method
+
+    private static Map<String, String> getKeyValue(Object parent, String path)
+    {
+        Map<String, String> pairs = new TreeMap<String, String>();
+
+        try
+        {
+            NodeList nodes = XMLHelpers.getNodes(parent, path);
+
+            for (int x = 0; x < nodes.getLength(); ++x)
+            {
+                Node node = nodes.item(x);
+
+                pairs.put(getString(node, "valueName"), getString(node, "value"));
+            }// End of for
+        }// End of try
+        catch (Exception e)
+        {
+            // An error occured.
+            // Right now, nothing is done about it.
+        }// End of catch
+
+        return pairs;
+    }// End of getKeyValue method
 
     /**
      * Returns the value of a single node.
@@ -178,7 +219,7 @@ class AlertXMLParser
      *
      * @since 1.0
      */
-    private static String getString(Object parent, String path) throws Exception
+    private static String getString(Object parent, String path)
     {
         Node node = XMLHelpers.getNode(parent, path);
 
@@ -197,7 +238,7 @@ class AlertXMLParser
      *
      * @since 1.0
      */
-    private static List<String> getStrings(Object parent, String path) throws Exception
+    private static List<String> getStrings(Object parent, String path)
     {
         NodeList nodes = XMLHelpers.getNodes(parent, path);
 
@@ -214,32 +255,6 @@ class AlertXMLParser
     }// End of getStrings method
 
     /**
-     * Parse a single <info> block.
-     *
-     * @return AlertInfo object from the info block.
-     *
-     * @since 1.0
-     */
-    static AlertInfo parseInfo()
-    {
-        AlertInfo.Builder builder = new AlertInfo.Builder();
-
-        try
-        {
-
-        }// End of try
-        catch (Exception e)
-        {
-            // Unfortunately, an error occured.
-            // Right now, nothing happens.
-            // null will be returned to the caller.
-            return null;
-        }// End of catch
-
-        return builder.build();
-    }// End of parseInfo method
-
-    /**
      * Return the references of the alert.
      *
      * @param parent The parent object, for the XPath search.
@@ -249,7 +264,7 @@ class AlertXMLParser
      *
      * @since 1.0
      */
-    private static List<AlertReference> getReferences(Object parent, String path) throws Exception
+    private static List<AlertReference> getReferences(Object parent, String path)
     {
         List<AlertReference> references = new ArrayList<AlertReference>();
         String rawReferences = getString(parent, path);
@@ -305,7 +320,7 @@ class AlertXMLParser
                                         .urgency(getEnum(AlertUrgency.class, node, "urgency"))
                                         .certainty(getEnum(AlertCertainty.class, node, "certainty"))
                                         .audience(getString(node, "audience"))
-                                        //.eventCodes(getKeyValue(node, "eventCode"))
+                                        .eventCodes(getKeyValue(node, "eventCode"))
                                         .effective(getCalendar(node, "effective"))
                                         .onset(getCalendar(node, "onset"))
                                         .expires(getCalendar(node, "expires"))
@@ -313,9 +328,9 @@ class AlertXMLParser
                                         .headline(getString(node, "headline"))
                                         .description(getString(node, "description"))
                                         .instruction(getString(node, "instruction"))
-                                        //.web(getURL(node, "web"))
+                                        .web(getURL(node, "web"))
                                         .contact(getString(node, "contact"))
-                                        //.parameters(getKeyValue(node, "parameter"))
+                                        .parameters(getKeyValue(node, "parameter"))
                                         //.resources(getResources(node, "resource"))
                                         //.areas(getAreas(node, "area"))
                                         .build());
