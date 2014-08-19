@@ -61,7 +61,7 @@ class AlertXMLParser
     {
         try
         {
-            String value = getNodeValue(parent, path);
+            String value = getString(parent, path);
 
             for (T ae : (T[]) enumType.getDeclaredMethod("values").invoke(null))
             {
@@ -80,6 +80,45 @@ class AlertXMLParser
 
         return null;
     }// End of getEnum method
+
+    /**
+     * Returns the Enum values based upon the string values.
+     *
+     * @param enumType The Enum type.
+     * @param parent The parent object, for the XPath search.
+     * @param path The XPath path for the matching element.
+     *
+     * @return List of Enum values matching their string counterparts in the XML.
+     *
+     * @since 1.0
+     */
+    private static <T extends Enum<T> & AlertEnum> List<T> getEnums(Class<T> enumType, Object parent, String path)
+    {
+        List<T> values = new ArrayList<T>();
+
+        try
+        {
+            List<String> rawValues = getStrings(parent, path);
+
+            for (String value : rawValues)
+            {
+                for (T ae : (T[]) enumType.getDeclaredMethod("values").invoke(null))
+                {
+                    if (value.equals(ae.getValue()))
+                    {
+                        values.add(ae);
+                    }// End of if
+                }// End of for
+            }// End of for
+        }// End of try
+        catch (Exception e)
+        {
+            // Unfortunately, an error occured.
+            // Right now, nothing happens.
+        }// End of catch
+
+        return values;
+    }// End of getEnums method
 
     /**
      * Returns the Calendar (Date/Time) value of a string.
@@ -105,9 +144,11 @@ class AlertXMLParser
         }// End of try
         catch(Exception e)
         {
-            e.printStackTrace();
-            return null;
+            // Unfortunately, an error occured.
+            // Right now, nothing happens.
         }// End of catch
+
+        return null;
     }// End of parseCalendar method
 
     /**
@@ -122,10 +163,10 @@ class AlertXMLParser
      *
      * @since 1.0
      */
-    private static Calendar getCalendarValue(Object parent, String path) throws Exception
+    private static Calendar getCalendar(Object parent, String path) throws Exception
     {
-        return parseCalendar(getNodeValue(parent, path));
-    }// End of getCalendarValue method
+        return parseCalendar(getString(parent, path));
+    }// End of getCalendar method
 
     /**
      * Returns the value of a single node.
@@ -137,7 +178,7 @@ class AlertXMLParser
      *
      * @since 1.0
      */
-    private static String getNodeValue(Object parent, String path) throws Exception
+    private static String getString(Object parent, String path) throws Exception
     {
         Node node = XMLHelpers.getNode(parent, path);
 
@@ -156,7 +197,7 @@ class AlertXMLParser
      *
      * @since 1.0
      */
-    private static List<String> getNodeValues(Object parent, String path) throws Exception
+    private static List<String> getStrings(Object parent, String path) throws Exception
     {
         NodeList nodes = XMLHelpers.getNodes(parent, path);
 
@@ -170,7 +211,7 @@ class AlertXMLParser
         }// End of for
 
         return values;
-    }// End of getNodeValues method
+    }// End of getStrings method
 
     /**
      * Parse a single <info> block.
@@ -211,7 +252,7 @@ class AlertXMLParser
     private static List<AlertReference> getReferences(Object parent, String path) throws Exception
     {
         List<AlertReference> references = new ArrayList<AlertReference>();
-        String rawReferences = getNodeValue(parent, path);
+        String rawReferences = getString(parent, path);
 
         if (rawReferences == null) return references;
 
@@ -245,7 +286,47 @@ class AlertXMLParser
      */
     private static List<AlertInfo> getInformation(Object parent, String path)
     {
-        return new ArrayList<AlertInfo>();
+        List<AlertInfo> info = new ArrayList<AlertInfo>();
+
+        try
+        {
+            NodeList nodes = XMLHelpers.getNodes(parent, path);
+
+            for (int x = 0; x < nodes.getLength(); ++x)
+            {
+                Node node = nodes.item(x);
+
+                info.add(new AlertInfo.Builder()
+                                        .language(getString(node, "language"))
+                                        .categories(getEnums(AlertCategory.class, node, "category"))
+                                        .event(getString(node, "event"))
+                                        .responseTypes(getEnums(AlertResponseType.class, node, "responseType"))
+                                        .severity(getEnum(AlertSeverity.class, node, "severity"))
+                                        .urgency(getEnum(AlertUrgency.class, node, "urgency"))
+                                        .certainty(getEnum(AlertCertainty.class, node, "certainty"))
+                                        .audience(getString(node, "audience"))
+                                        //.eventCodes(getKeyValue(node, "eventCode"))
+                                        .effective(getCalendar(node, "effective"))
+                                        .onset(getCalendar(node, "onset"))
+                                        .expires(getCalendar(node, "expires"))
+                                        .senderName(getString(node, "senderName"))
+                                        .headline(getString(node, "headline"))
+                                        .description(getString(node, "description"))
+                                        .instruction(getString(node, "instruction"))
+                                        //.web(getURL(node, "web"))
+                                        .contact(getString(node, "contact"))
+                                        //.parameters(getKeyValue(node, "parameter"))
+                                        //.resources(getResources(node, "resource"))
+                                        //.areas(getAreas(node, "area"))
+                                        .build());
+            }// End of for
+        }// End of catch
+        catch (Exception e)
+        {
+            return info;
+        }// End of catch
+
+        return info;
     }// End of getInformation method
 
     /**
@@ -264,19 +345,19 @@ class AlertXMLParser
             Element root = XMLHelpers.parseXML(xml).getDocumentElement();
 
             return new Alert.Builder()
-                                .identifier(getNodeValue(root, "identifier"))
-                                .sender(getNodeValue(root, "sender"))
-                                .sent(getCalendarValue(root, "sent"))
+                                .identifier(getString(root, "identifier"))
+                                .sender(getString(root, "sender"))
+                                .sent(getCalendar(root, "sent"))
                                 .status(getEnum(AlertStatus.class, root, "status"))
                                 .type(getEnum(AlertType.class, root, "msgType"))
-                                .source(getNodeValue(root, "source"))
+                                .source(getString(root, "source"))
                                 .scope(getEnum(AlertScope.class, root, "scope"))
-                                .restriction(getNodeValue(root, "restriction"))
-                                .addresses(getNodeValues(root, "addresses"))
-                                .codes(getNodeValues(root, "code"))
-                                .note(getNodeValue(root, "note"))
+                                .restriction(getString(root, "restriction"))
+                                .addresses(getStrings(root, "addresses"))
+                                .codes(getStrings(root, "code"))
+                                .note(getString(root, "note"))
                                 .references(getReferences(root, "references"))
-                                .incidents(getNodeValues(root, "incidents"))
+                                .incidents(getStrings(root, "incidents"))
                                 .information(getInformation(root, "info"))
                                 .build();
         }// End of try
