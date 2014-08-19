@@ -141,10 +141,9 @@ class AlertXMLParser
     {
         try
         {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-
             Calendar time = GregorianCalendar.getInstance();
-            time.setTime(format.parse(value));
+            time.setTime(AlertsCanada.DATE_TIME_FORMATTER.parse(value));
+            time.setTimeZone(TimeZone.getTimeZone(value.substring(value.length() - 6)));
 
             return time;
         }// End of try

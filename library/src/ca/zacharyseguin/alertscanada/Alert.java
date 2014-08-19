@@ -174,7 +174,7 @@ public class Alert implements Cloneable, Serializable
      */
     public String getSender()
     {
-        return this.identifier;
+        return this.sender;
     }// End of getSender method
 
     /**

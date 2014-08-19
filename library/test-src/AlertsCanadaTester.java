@@ -10,7 +10,17 @@ import java.lang.reflect.*;
 
 public class AlertsCanadaTester
 {
-    public static void main (String[] args) throws Exception
+    private static void writeFile(String filename, String contents)
+    {
+        try
+        {
+            PrintWriter writer = new PrintWriter(new FileWriter(filename, true), true);
+            writer.print(contents);
+            writer.close();
+        } catch (Exception e) {};
+    }// End of writeFile method
+
+    public static void main(String[] args) throws Exception
     {
         final Gson gson = new GsonBuilder()
                     .serializeNulls()
@@ -23,18 +33,21 @@ public class AlertsCanadaTester
                     })
                     .create();
 
-        AlertsCanada ac = new AlertsCanada();
+        final AlertsCanada ac = new AlertsCanada();
         ac.addAlertsListener(new AlertsListener() {
             public void alertReceived(Alert alert) {
-                System.out.println(gson.toJson(alert));
+                System.out.println("AlertReceived: " + alert.getIdentifier());
+                writeFile("alerts.json", gson.toJson(ac.getAlerts()));
             }
 
             public void alertUpdated(Alert newAlert, Alert oldAlert) {
-                System.out.println(gson.toJson(newAlert));
+                System.out.println("AlertUpdated: " + newAlert.getIdentifier() + " - " + oldAlert.getIdentifier());
+                writeFile("alerts.json", gson.toJson(ac.getAlerts()));
             }
 
             public void alertEnded(Alert alert) {
-                System.out.println(gson.toJson(alert));
+                System.out.println("AlertEnded: " + alert.getIdentifier());
+                writeFile("alerts.json", gson.toJson(ac.getAlerts()));
             }
         });
 

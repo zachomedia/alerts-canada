@@ -23,9 +23,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package ca.zacharyseguin.alertscanada;
 
+import ca.zacharyseguin.util.net.HttpContents;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
+import java.util.TreeMap;
+
+import java.text.SimpleDateFormat;
 
 import java.io.*;
 import java.net.*;
@@ -43,9 +49,19 @@ import java.net.*;
  */
 public class AlertsCanada
 {
+    public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
+    public static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat(DATE_TIME_FORMAT);
+    static { DATE_TIME_FORMATTER.setTimeZone(TimeZone.getTimeZone("UTC")); }
+
     public static final String NAAD_HOSTNAME_OAKVILLE = "streaming1.naad-adna.pelmorex.com";
+    public static final String NAAD_MISSED_HOSTNAME_OAKVILLE = "capcp1.naad-adna.pelmorex.com";
+
     public static final String NAAD_HOSTNAME_MONTREAL = "streaming2.naad-adna.pelmorex.com";
+    public static final String NAAD_MISSED_HOSTNAME_MONTREAL = "capcp2.naad-adna.pelmorex.com";
+
     public static final int NAAD_PORT = 8080;
+
+    private static final String NAAD_HEARTBEAT_SENDER = "NAADS-Heartbeat";
 
     /**
      * List of active alerts.
@@ -56,6 +72,8 @@ public class AlertsCanada
      */
     private Map<String, Alert> alerts;
 
+    private List<String> processedAlerts;
+
     /**
      * List of registered alert listeners.
      *
@@ -65,20 +83,140 @@ public class AlertsCanada
 
     public AlertsCanada() throws UnknownHostException, IOException
     {
+        this.alerts = new TreeMap<String, Alert>();
+        this.processedAlerts = new ArrayList<String>();
         this.alertsListeners = new ArrayList<AlertsListener>();
+
         StreamListener listener = new StreamListener(NAAD_HOSTNAME_OAKVILLE, NAAD_PORT);
     }
 
+    public List<Alert> getAlerts()
+    {
+        return new ArrayList<Alert>(this.alerts.values());
+    }
+
+    // TODO: Perform request in a seperate thread
+    public void requestAlert(String hostname, AlertReference alertReference)
+    {
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(DATE_TIME_FORMAT);
+        dateTimeFormat.setTimeZone(alertReference.getSent().getTimeZone());
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(alertReference.getSent().getTimeZone());
+
+        String dateTime = dateTimeFormat.format(alertReference.getSent().getTime()).replace("Z", "-00:00");
+
+        String file = dateTime + "I" + alertReference.getIdentifier();
+        file = file.replaceAll("(-|:)", "_");
+        file = file.replaceAll("\\+", "p");
+
+        try
+        {
+            URL url = new URL("http://" + hostname + "/" + dateFormat.format(alertReference.getSent().getTime()) + "/" + file + ".xml");
+            this.parseAlert(HttpContents.getURLContents(url));
+        }// End of try
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }// End of catch
+    }// End of requestAlert method
+
+    /**
+     * TODO: Make ignoring of alert optional.
+     */
     public void parseAlert(String xml)
     {
         Alert alert = AlertXMLParser.parse(xml);
 
+        // Process the alert
         if (alert != null)
         {
-            for (AlertsListener listener : alertsListeners)
+            // Ignore test, exercise and draft messages
+            if (   alert.getStatus() != AlertStatus.SYSTEM
+                && alert.getStatus() != AlertStatus.ACTUAL) return;
+
+            // Check System alerts for heartbeat
+            // If heartbeat, ensure we have received all previous alert.
+            if (alert.getStatus() == AlertStatus.SYSTEM)
             {
-                listener.alertReceived(alert);
-            }// end of for
+                if (alert.getSender().equals(NAAD_HEARTBEAT_SENDER))
+                {
+                    // Ensure that we have received all references
+                    for (AlertReference reference : alert.getReferences())
+                    {
+                        if (!this.processedAlerts.contains(reference.getIdentifier()))
+                        {
+                            this.requestAlert(NAAD_MISSED_HOSTNAME_OAKVILLE, reference);
+                        }// End of if
+                    }// End of for
+                }// End of if
+
+                // Ignore the alert, we don't need to worry about it.
+                return;
+            }// End of if
+
+            // If it's a new alert, add it and say we received a new alert.
+            if (alert.getType() == AlertType.UPDATE)
+            {
+                Boolean update = false;
+
+                // Remove old alerts and mention that it was updated
+                for (AlertReference reference : alert.getReferences())
+                {
+                    if (this.alerts.containsKey(reference.getIdentifier()))
+                    {
+                        update = true;
+
+                        for (AlertsListener listener : this.alertsListeners)
+                        {
+                            listener.alertUpdated(alert, this.alerts.get(reference.getIdentifier()));
+                        }// End of for
+
+                        this.alerts.remove(reference.getIdentifier());
+                    }// End of if
+                }// End of for
+
+                if (!update)
+                {
+                    for (AlertsListener listener : this.alertsListeners)
+                    {
+                        listener.alertReceived(alert);
+                    }// End of for
+                }// End of if
+            }// End of if
+            else if (alert.getType() == AlertType.CANCEL)
+            {
+                // TODO: Verfiy this is correct
+
+                // Remove old alerts and mention that it was cancelled
+                for (AlertReference reference : alert.getReferences())
+                {
+                    if (this.alerts.containsKey(reference.getIdentifier()))
+                    {
+                        for (AlertsListener listener : this.alertsListeners)
+                        {
+                            listener.alertEnded(this.alerts.get(reference.getIdentifier()));
+                        }// End of for
+
+                        this.alerts.remove(reference.getIdentifier());
+                    }// End of if
+                }// End of for
+            }// End of else if
+            else
+            {
+                for (AlertsListener listener : this.alertsListeners)
+                {
+                    listener.alertReceived(alert);
+                }// end of for
+            }// End of else
+
+            // Store the alert
+            this.alerts.put(alert.getIdentifier(), alert);
+
+            this.processedAlerts.add(alert.getIdentifier());
+            if (this.processedAlerts.size() > 50) this.processedAlerts.remove(0);
+
+
         }// End of if
     }// End of parseAlert method
 
@@ -127,7 +265,6 @@ public class AlertsCanada
                         content += (char)c;
                         if (content.contains("</alert>"))
                         {
-                            System.out.println(content);
                             parseAlert(content);
                             content = "";
                         }// End of if
@@ -135,6 +272,7 @@ public class AlertsCanada
                     }// End of try
                     catch (Exception e)
                     {
+                        content = "";
                         ++failures;
                         if (failures >= 3)
                         {
