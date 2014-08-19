@@ -23,13 +23,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package ca.zacharyseguin.alertscanada;
 
+import ca.zacharyseguin.util.xml.XMLHelpers;
+
 import java.util.*;
-import java.io.*;
+
 import java.text.SimpleDateFormat;
-import javax.xml.parsers.*;
-import javax.xml.xpath.*;
-import org.w3c.dom.*;
-import org.xml.sax.*;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * AlertsCanada is the class which is responsible for handling
@@ -44,12 +46,6 @@ import org.xml.sax.*;
  */
 class AlertXMLParser
 {
-    /**
-     * XPath object for performing XPath operations.
-     * @since 1.0
-     */
-    private static XPath xpath;
-
     /**
      * Returns the Enum value based upon the value. This method operates only a single matching element.
      *
@@ -86,6 +82,35 @@ class AlertXMLParser
     }// End of getEnum method
 
     /**
+     * Returns the Calendar (Date/Time) value of a string.
+     * <br />
+     * Expected Format: yyyy-MM-dd'T'HH:mm:ssX
+     *
+     * @param value The String value to parse.
+     *
+     * @return Calendar value if value is provided and correct, <code>null</code> otherwise.
+     *
+     * @since 1.0
+     */
+    private static Calendar parseCalendar(String value)
+    {
+        try
+        {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+
+            Calendar time = GregorianCalendar.getInstance();
+            time.setTime(format.parse(value));
+
+            return time;
+        }// End of try
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }// End of catch
+    }// End of parseCalendar method
+
+    /**
      * Returns the Calendar (Date/Time) value of an element.
      * <br />
      * Expected Format: yyyy-MM-dd'T'HH:mm:ssX
@@ -99,21 +124,7 @@ class AlertXMLParser
      */
     private static Calendar getCalendarValue(Object parent, String path) throws Exception
     {
-        String value = getNodeValue(parent, path);
-
-        try
-        {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
-            System.out.println(format.format(new Date()));
-            Calendar time = GregorianCalendar.getInstance();
-            time.setTime(format.parse(value));
-            return time;
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-            return null;
-        }
+        return parseCalendar(getNodeValue(parent, path));
     }// End of getCalendarValue method
 
     /**
@@ -128,15 +139,11 @@ class AlertXMLParser
      */
     private static String getNodeValue(Object parent, String path) throws Exception
     {
-        if (xpath == null)
-        {
-            xpath = XPathFactory
-                            .newInstance()
-                            .newXPath();
-        }// End of if
+        Node node = XMLHelpers.getNode(parent, path);
 
-        XPathExpression expression = xpath.compile(path + "/text()");
-        return expression.evaluate(parent);
+        if (node == null) return null;
+
+        return node.getTextContent();
     }// End of getNode method
 
     /**
@@ -151,15 +158,10 @@ class AlertXMLParser
      */
     private static List<String> getNodeValues(Object parent, String path) throws Exception
     {
-        if (xpath == null)
-        {
-            xpath = XPathFactory
-                            .newInstance()
-                            .newXPath();
-        }// End of if
+        NodeList nodes = XMLHelpers.getNodes(parent, path);
 
-        XPathExpression expression = xpath.compile(path + "/text()");
-        NodeList nodes = (NodeList)expression.evaluate(parent, XPathConstants.NODESET);
+        if (nodes == null) return null;
+
         List<String> values = new ArrayList<String>();
 
         for (int x = 0; x < nodes.getLength(); ++x)
@@ -169,6 +171,82 @@ class AlertXMLParser
 
         return values;
     }// End of getNodeValues method
+
+    /**
+     * Parse a single <info> block.
+     *
+     * @return AlertInfo object from the info block.
+     *
+     * @since 1.0
+     */
+    static AlertInfo parseInfo()
+    {
+        AlertInfo.Builder builder = new AlertInfo.Builder();
+
+        try
+        {
+
+        }// End of try
+        catch (Exception e)
+        {
+            // Unfortunately, an error occured.
+            // Right now, nothing happens.
+            // null will be returned to the caller.
+            return null;
+        }// End of catch
+
+        return builder.build();
+    }// End of parseInfo method
+
+    /**
+     * Return the references of the alert.
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path The XPath path for the matching elements.
+     *
+     * @return The references of the alert.
+     *
+     * @since 1.0
+     */
+    private static List<AlertReference> getReferences(Object parent, String path) throws Exception
+    {
+        List<AlertReference> references = new ArrayList<AlertReference>();
+        String rawReferences = getNodeValue(parent, path);
+
+        if (rawReferences == null) return references;
+
+        String[] seperatedRawReferences = rawReferences.split("\\s");
+
+        for (String rawReference : seperatedRawReferences)
+        {
+            String[] referenceComponents = rawReference.split(",");
+
+            if (referenceComponents.length != 3) continue;
+
+            references.add(new AlertReference.Builder()
+                                                .sender(referenceComponents[0])
+                                                .identifier(referenceComponents[1])
+                                                .sent(parseCalendar(referenceComponents[2]))
+                                                .build());
+        }// End of for
+
+        return references;
+    }// End of getReferences method
+
+    /**
+     * Return the information objects of the alert.
+     *
+     * @param parent The parent object, for the XPath search.
+     * @param path The XPath path for the matching elements.
+     *
+     * @return The information objects of the alert.
+     *
+     * @since 1.0
+     */
+    private static List<AlertInfo> getInformation(Object parent, String path)
+    {
+        return new ArrayList<AlertInfo>();
+    }// End of getInformation method
 
     /**
      * Parses the provided XML text into an Alert object.
@@ -181,42 +259,34 @@ class AlertXMLParser
      */
     static Alert parse(String xml)
     {
-        Alert.Builder builder = new Alert.Builder();
-
         try
         {
-            Element root = DocumentBuilderFactory
-                        .newInstance()
-                        .newDocumentBuilder()
-                        .parse(new ByteArrayInputStream(xml.getBytes()))
-                        .getDocumentElement();
+            Element root = XMLHelpers.parseXML(xml).getDocumentElement();
 
-
-
-            builder
-                .identifier(getNodeValue(root, "identifier"))
-                .sender(getNodeValue(root, "sender"))
-                .sent(getCalendarValue(root, "sent"))
-                .status(getEnum(AlertStatus.class, root, "status"))
-                .type(getEnum(AlertType.class, root, "msgType"))
-                .source(getNodeValue(root, "source"))
-                .scope(getEnum(AlertScope.class, root, "scope"))
-                .restriction(getNodeValue(root, "restriction"))
-                .addresses(getNodeValues(root, "addresses"))
-                .codes(getNodeValues(root, "code"))
-                .note(getNodeValue(root, "note"))
-                //.references()
-                .incidents(getNodeValues(root, "incidents"));
-                //.information();
+            return new Alert.Builder()
+                                .identifier(getNodeValue(root, "identifier"))
+                                .sender(getNodeValue(root, "sender"))
+                                .sent(getCalendarValue(root, "sent"))
+                                .status(getEnum(AlertStatus.class, root, "status"))
+                                .type(getEnum(AlertType.class, root, "msgType"))
+                                .source(getNodeValue(root, "source"))
+                                .scope(getEnum(AlertScope.class, root, "scope"))
+                                .restriction(getNodeValue(root, "restriction"))
+                                .addresses(getNodeValues(root, "addresses"))
+                                .codes(getNodeValues(root, "code"))
+                                .note(getNodeValue(root, "note"))
+                                .references(getReferences(root, "references"))
+                                .incidents(getNodeValues(root, "incidents"))
+                                .information(getInformation(root, "info"))
+                                .build();
         }// End of try
         catch (Exception e)
         {
             // Unfortunately, an error occured.
             // Right now, nothing happens.
             // null will be returned to the caller.
-            return null;
         }// End of catch
 
-        return builder.build();
+        return null;
     }// End of parse
 }// End of class

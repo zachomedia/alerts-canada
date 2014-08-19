@@ -95,7 +95,7 @@ public class AlertsCanada
         {
             this.socket = new Socket(hostname, port);
             SocketInputStreamListener listener = new SocketInputStreamListener(this.socket.getInputStream());
-            listener.start();
+            //listener.start();
         }// End of constructor method
 
         public class SocketInputStreamListener extends Thread
