@@ -95,7 +95,7 @@ public class AlertsCanada
         {
             this.socket = new Socket(hostname, port);
             SocketInputStreamListener listener = new SocketInputStreamListener(this.socket.getInputStream());
-            //listener.start();
+            listener.start();
         }// End of constructor method
 
         public class SocketInputStreamListener extends Thread
@@ -127,7 +127,9 @@ public class AlertsCanada
                         content += (char)c;
                         if (content.contains("</alert>"))
                         {
+                            System.out.println(content);
                             parseAlert(content);
+                            content = "";
                         }// End of if
                         failures = 0;
                     }// End of try
