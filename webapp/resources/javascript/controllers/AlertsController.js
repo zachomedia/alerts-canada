@@ -24,7 +24,11 @@
 
 angular
    .module('Alerts')
-   .controller('AlertsController', ['$scope', 'AlertsAPI', function($scope, AlertsAPI) {
+   .controller('AlertsController', ['$scope', 'AlertsAPI', '$routeParams', function($scope, AlertsAPI, $routeParams) {
+      $scope.isSelectedAlert = function(alert) {
+         return $routeParams.identifier == alert.identifier;
+      };
+
       $scope.alerts = AlertsAPI.alerts.query(function() {
          $scope.$broadcast('alertsloaded');
       });
@@ -33,5 +37,5 @@ angular
          var past = new Date(time);
          var now = new Date();
          return past < now;
-      }
+      };
    }]);

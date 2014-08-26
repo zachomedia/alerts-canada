@@ -34,12 +34,14 @@ angular
             templateUrl: 'views/home.html',
             controller: 'HomeController'
          })
+         .when('/about', {
+            templateUrl: 'views/about.html'
+         })
          .when('/alert/:identifier', {
             templateUrl: 'views/alert.html',
             controller: 'AlertController'
          })
          .otherwise({
-            templateUrl: 'views/not-found.html',
-            controller: 'NotFoundController'
+            templateUrl: 'views/not-found.html'
          });
    });

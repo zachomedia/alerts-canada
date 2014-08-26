@@ -242,6 +242,10 @@ em, b {
    }
 
 /* Alert Info */
+#content-container #content .selected a {
+   color: inherit;   
+}
+
 #content-container #content .alert-meta {
    font-size: 0.9em;
    line-height: 1.3em;
