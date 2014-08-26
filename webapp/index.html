@@ -1,0 +1,96 @@
+<!doctype html>
+<html ng-app="AlertsCanada">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+        <title>Alerts Canada &ndash; Zachary Seguin</title>
+
+        <link rel="icon" href="https://zacharyseguin.ca/favicon.png" />
+
+        <link href="https://zacharyseguin.ca/images/apple-touch-icon.png" rel="apple-touch-icon" />
+        <link href="https://zacharyseguin.ca/images/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76" />
+        <link href="https://zacharyseguin.ca/images/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120" />
+        <link href="https://zacharyseguin.ca/images/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152" />
+
+        <link href='//fonts.googleapis.com/css?family=Roboto:100,300,400,500,700' rel='stylesheet' type='text/css'>
+
+        <link rel="stylesheet" href="resources/stylesheets/reset.css" />
+        <link rel="stylesheet" href="resources/stylesheets/960.css" />
+        <link rel="stylesheet" href="resources/stylesheets/font-awesome.css" />
+        <link rel="stylesheet" href="resources/stylesheets/alerts.css" />
+
+        <!--[if lt IE 9]>
+            <script src="resources/javascript/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+    <body ng-controller="Alerts">
+        <div id="site-header-wrapper">
+            <header id="site-header" class="container_12">
+                <a href="https://zacharyseguin.ca/"><img src="https://zacharyseguin.ca/images/logo.png" alt="Zachary Seguin" /></a>
+            </header>
+        </div><!-- end of site-header-wrapper -->
+
+        <div id="site-navigation-wrapper">
+            <section id="site-navigation" class="container_12">
+                <nav class="grid_4">
+                    <ul>
+                        <li style="font-weight: bold;">Alerts Canada</li>
+                    </ul>
+                </nav>
+
+                <menu class="grid_8">
+                    <ul>
+                        <li style="color: #aa0000; font-weight: bold;">This application is under development and should be relied upon for emergency alerts.</li>
+                    </ul>
+                </menu>
+            </section>
+        </div><!-- end of site-navigation-wrapper -->
+
+        <div id="body-wrapper" class="container_12">
+            <section id="body" class="grid_12">
+                <h1 class="page-header">Alerts</h1>
+
+                <section id="alerts">
+                    <article class="alert-grouping" ng-repeat="alert in alerts">
+                        <article class="alert-information" ng-repeat="info in alert.information">
+                            <header>
+                                <h2>{{info.headline | uppercase}}</h2>
+                                <p>Issued by <em>{{info.senderName}}</em> on <em>{{info.effective | date:"EEEE, MMMM d, yyyy 'at' h:mm a"}}</em></p>
+                                <p>Expires {{info.expires | date:"EEEE, MMMM d, yyyy 'at' h:mm a"}}</p>
+                                <p class="areas">For <span ng-repeat="area in info.areas">{{area.description}}</span>.</p>
+                            </header>
+
+                            <p ng-bind-html="info.description | linebreaks"></p>
+                        </article>
+                    </article>
+                </section>
+            </section><!-- end of body -->
+        </div><!-- end of body-wrapper -->
+
+        <div id="site-footer-wrapper">
+            <footer id="site-footer" class="container_12">
+                <p class="grid_12 small">Copyright &copy; 2014 &ndash; <a href="https://zacharyseguin.ca">Zachary Seguin</a><br />All Rights Reserved.</p>
+            </footer>
+        </div><!-- end of site-footer-wrapper -->
+
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-sanitize.min.js"></script>
+        <script>
+            angular.module('AlertsCanada', [
+                'ngResource',
+                'ngSanitize'
+            ])
+            .filter('linebreaks', function($filter) {
+                return function(text) {
+                    return text.replace(/\n/g, '<br />');
+                };
+            })
+            .controller('Alerts', ['$scope', '$resource', '$sce', function($scope, $resource, $sce) {
+                $scope.alerts = $resource('http://api.alerts.zacharyseguin.ca').query();
+            }]);
+        </script>
+    </body>
+</html>

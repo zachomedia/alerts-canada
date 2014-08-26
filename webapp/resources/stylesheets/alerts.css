@@ -1,0 +1,336 @@
+/*
+The MIT License (MIT)
+
+Copyright (c) 2014 Zachary Seguin
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+*/
+
+/** GENERAL **/
+h1, h2, h3, h4, h5, h6 {
+	color: black;
+}
+
+h1 {
+	font-size: 32px;
+    font-weight: 100;
+}
+
+h2 {
+	background: #eee;
+	color: #545454;
+
+	padding: 5px 10px;
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+
+h3 {
+	font-size: 18px;
+}
+
+h4 {
+	font-size: 15px;
+}
+
+p {
+	padding: 8px 0;
+	color: #545454;
+	line-height: 1.4em;
+}
+
+p > b {
+	font-weight: bold;
+	color: #333;
+}
+
+a {
+	color: #878787;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #323232;
+}
+
+a img {
+	outline: none;
+	border: none;
+}
+
+table {
+	margin: 15px 0;
+}
+
+th, td {
+	padding: 5px;
+	background: white;
+	border-bottom: 1px solid #eee;
+	line-height: 25px;
+
+	transition: background 500ms;
+}
+
+thead {
+	border: none;
+}
+
+tbody {
+	/* border: 1px solid #eee; */
+	border: none;
+}
+
+thead th {
+	font-weight: bold;
+	text-align: center;
+}
+
+label, .value {
+	padding: 5px 0;
+}
+
+label {
+	text-align: right;
+	font-weight: bold;
+	vertical-align:top;
+}
+
+#body form > label {
+	display: inline-block;
+   width: 150px;
+   margin-right: 10px;
+}
+
+#body form input:not([type=checkbox]), #body form select, #body form .value {
+	display: inline-block;
+   width: 700px;
+}
+
+   #body form .value label {
+	   font-weight: normal;
+	   text-align: left;
+	}
+
+input[type=text], input[type=password], input[type=search] {
+	font-family: 'Roboto', sans-serif;
+	font-size: 13px;
+
+	margin: 4px 0;
+	width: 250px;
+	padding: 5px;
+
+	border: 1px solid #ddd;
+
+	-webkit-appearance: none;
+	outline: none;
+	-webkit-transition: border 500ms;
+}
+
+   input[type=text]:focus, input[type=password]:focus, input[type=search]:focus {
+      border-color: #aaa;
+   }
+
+.fa span {
+	display: none;
+}
+
+#body ul {
+	list-style: square;
+
+	margin-top: 10px;
+	margin-left: 25px;
+}
+
+   #body li {
+      padding: 5px;
+   }
+
+/** BODY **/
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size: 14px;
+    font-weight: 300;
+}
+
+/** HEADER **/
+#site-header-wrapper {
+	background: #545454;
+   border-bottom: 1px solid #222;
+}
+
+   #site-header {
+      position: relative;
+      height: 50px;
+   }
+
+	   #site-header img {
+	      position: absolute;
+	      left: 0;
+	      top: 0;
+
+	      height: 50px;
+
+	      border: none;
+	      outline: none;
+	   }
+
+	   #site-header h1 {
+	      position: absolute;
+	      left: 250px;
+	      top: 0;
+
+	      display: inline-block;
+	      font-size: 25px;
+	      font-weight: 500;
+	      line-height: 50px;
+	      margin: 0;
+	      padding: 0;
+
+	      color: white;
+	   }
+
+/** MENU **/
+#site-navigation-wrapper {
+	background: #eee;
+	border-bottom: 1px solid #aaa;
+}
+
+#site-navigation {
+	font-size: 15px;
+	padding: 10px 5px;
+}
+
+   #site-navigation nav ul {
+      float: left;
+   }
+
+   #site-navigation menu ul {
+      float: right;
+   }
+
+   #site-navigation ul {
+      list-style: none;
+   }
+
+      #site-navigation li {
+         float: left;
+         margin: 0;
+         padding: 0 10px;
+
+         color: #555;
+
+         border-right: 1px solid #aaa;
+      }
+
+      #site-navigation li:last-child {
+         border-right: none;
+         padding-right: 0px;
+      }
+
+         #site-navigation li a, #site-navigation li input[type=submit]{
+            color: inherit;
+            text-decoration: none;
+         }
+
+         #site-navigation li a:hover, #site-navigation li input[type=submit]:hover {
+            color: #222;
+         }
+
+         #site-navigation li form {
+            margin: 0;
+            padding: 0;
+         }
+
+         #site-navigation li input[type=submit] {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            -webkit-appearance: none;
+            font-size: inherit;
+            padding: 0;
+            margin: 0;
+            font-family: inherit;
+            outline: none;
+         }
+
+         #site-navigation li input[type=text] {
+            margin: 0;
+            padding: 1px 5px;
+            font-size: 13px;
+         }
+
+/** BODY **/
+.page-header {
+	color: #545454;
+	font-size: 40px;
+
+	padding: 10px 0;
+	border-bottom: 2px solid #eee;
+
+	margin-bottom: 20px;
+}
+
+#body {
+    margin-top: 5px;
+}
+
+/** FOOTER **/
+#site-footer-wrapper {
+   padding: 20px 0;
+}
+   #site-footer p:first-child {
+      border-top: 2px solid #eee;
+      padding-top: 15px;
+   }
+
+	   #site-footer p {
+	      font-size: 15px;
+	      color: #aaa;
+	      text-align: center;
+
+	      padding: 2px 0;
+	   }
+
+	   #site-footer .small {
+	      font-size: 13px;
+	   }
+
+/** ALERTS **/
+.alert-information header {
+}
+
+    .alert-information header p {
+        font-size: 0.9em;
+        margin: 0 5px;
+        padding: 2px 5px;
+        color: #aaa;
+    }
+
+        .alert-information header p em {
+            font-weight: 400;
+            color: #666;
+        }
+
+        .areas span:after {
+            content: ', ';
+        }
+
+        .areas span:last-child:after {
+            content: '';
+        }
