@@ -61,6 +61,7 @@ public class HttpContents
                     }// End of if
 
                     content.append(new String(line.getBytes("UTF-8"), "UTF-8"));
+                    content.append("\n");
                 }// End of try
                 catch (Exception e)
                 {
