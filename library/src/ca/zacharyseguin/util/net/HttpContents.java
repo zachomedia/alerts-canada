@@ -28,6 +28,9 @@ import java.io.InputStreamReader;
 
 import java.net.URL;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 /**
  * Class to get the contents of a file requested via web.
  *
@@ -37,34 +40,42 @@ import java.net.URL;
  */
 public class HttpContents
 {
+    private static Logger logger = LogManager.getLogger(HttpContents.class);
+
     public static String getURLContents(URL url)
     {
         try
         {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String temp = "";
-            String contents = "";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
+            StringBuilder content = new StringBuilder();
 
-            while (true)
+            while(true)
             {
-                int c = reader.read();
-
-                if (c == -1)
+                try
                 {
-                    break;
-                }// End of if
+                    String line = reader.readLine();
 
-                contents += (char)c;
+                    if (line == null)
+                    {
+                        break;
+                    }// End of if
+
+                    content.append(new String(line.getBytes("UTF-8"), "UTF-8"));
+                }// End of try
+                catch (Exception e)
+                {
+                    return null;
+                }// End of catch
             }// End of while
 
             reader.close();
-            return contents;
+            return new String(content.toString());
         }// End of try
         catch (Exception e)
         {
             // An error occured
             // Right now, ignore it.
-            
+
             return null;
         }// End of catch
     }// End of getURLContents method

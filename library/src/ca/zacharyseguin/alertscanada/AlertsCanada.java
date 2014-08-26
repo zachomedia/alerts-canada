@@ -36,6 +36,9 @@ import java.text.SimpleDateFormat;
 import java.io.*;
 import java.net.*;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 /**
  * AlertsCanada is the class which is responsible for handling
  * the connection to the NAAD system.
@@ -49,6 +52,8 @@ import java.net.*;
  */
 public class AlertsCanada
 {
+    private static Logger logger = LogManager.getLogger(AlertsCanada.class);
+
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ssXXX";
     public static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat(DATE_TIME_FORMAT);
     static { DATE_TIME_FORMATTER.setTimeZone(TimeZone.getTimeZone("UTC")); }
@@ -83,6 +88,8 @@ public class AlertsCanada
 
     public AlertsCanada() throws UnknownHostException, IOException
     {
+        logger.info("Initializing Alerts Canada...");
+
         this.alerts = new TreeMap<String, Alert>();
         this.processedAlerts = new ArrayList<String>();
         this.alertsListeners = new ArrayList<AlertsListener>();
@@ -127,6 +134,7 @@ public class AlertsCanada
      */
     public void parseAlert(String xml)
     {
+        System.out.println(xml);
         Alert alert = AlertXMLParser.parse(xml);
 
         // Process the alert
@@ -277,33 +285,43 @@ public class AlertsCanada
 
             public void run()
             {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(this.inputStream));
-                String content = "";
-
-                while(true)
+                try
                 {
-                    try
-                    {
-                        int c = reader.read();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(this.inputStream, "UTF-8"));
+                    StringBuilder content = new StringBuilder();
 
-                        if (c == -1)
+                    while(true)
+                    {
+                        try
                         {
+                            int c = reader.read();
+
+                            if (c == -1)
+                            {
+                                break;
+                            }// End of if
+
+                            content.append((char)c);
+                            if (content.toString().contains("</alert>"))
+                            {
+                                logger.debug(content.toString());
+                                parseAlert(content.toString());
+                                content = new StringBuilder();
+                            }// End of if
+                        }// End of try
+                        catch (Exception e)
+                        {
+                            e.printStackTrace();
+                            content = new StringBuilder();
                             break;
-                        }// End of if
-
-                        content += (char)c;
-                        if (content.contains("</alert>"))
-                        {
-                            parseAlert(content);
-                            content = "";
-                        }// End of if
-                    }// End of try
-                    catch (Exception e)
-                    {
-                        content = "";
-                        break;
-                    }// End of catch
-                }// End of while
+                        }// End of catch
+                    }// End of while
+                }// End of try
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    // do nothing for now.
+                }
             }// End of run method
         }// End of SocketStreamListener class
     }// End of StreamListener class

@@ -48,6 +48,7 @@ public class XMLHelpers
     {
         try
         {
+            System.out.println(xml);
             return DocumentBuilderFactory
                                     .newInstance()
                                     .newDocumentBuilder()
@@ -55,6 +56,7 @@ public class XMLHelpers
         }// End of try
         catch (Exception e)
         {
+            e.printStackTrace();
             return null;
         }// End of catch
     }// End of parseXML method

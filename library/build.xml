@@ -65,8 +65,10 @@
         <javadoc sourcepath="${src.dir}" destdir="${docs.dir}" access="private" />
     </target>
     <target name="run" depends="jar">
-        <java jar="${jar.dir}/${ant.project.name}-test.jar" fork="true" />
+        <java jar="${jar.dir}/${ant.project.name}-test.jar" fork="true">
+            <sysproperty key="log4j.configurationFile" value="test-src/log4j2.xml" />
+        </java>
     </target>
     <target name="clean-build" depends="clean,jar" />
-    <target name="main" depends="clean,docs,run" />
+    <target name="main" depends="clean,run" />
 </project>

@@ -39,6 +39,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 /**
  * AlertsCanada is the class which is responsible for handling
  * the connection to the NAAD system.
@@ -52,6 +55,8 @@ import org.w3c.dom.NodeList;
  */
 class AlertXMLParser
 {
+    private static Logger logger = LogManager.getLogger(AlertXMLParser.class);
+
     /**
      * Returns the Enum value based upon the value. This method operates only a single matching element.
      *
@@ -306,6 +311,7 @@ class AlertXMLParser
 
         if (node == null) return null;
 
+        logger.debug("Returning string value: " + node.getTextContent());
         return node.getTextContent();
     }// End of getString method
 
@@ -463,6 +469,7 @@ class AlertXMLParser
         }// End of catch
         catch (Exception e)
         {
+            e.printStackTrace();
             // An error occured.
             // Just return what we have so far.
         }// End of catch
@@ -504,6 +511,7 @@ class AlertXMLParser
         }// End of catch
         catch (Exception e)
         {
+            e.printStackTrace();
             // An error occured.
             // Just return what we have so far.
         }// End of catch
@@ -560,6 +568,7 @@ class AlertXMLParser
         }// End of catch
         catch (Exception e)
         {
+            e.printStackTrace();
             // An error occured.
             // Just return what we have so far.
         }// End of catch
@@ -636,6 +645,8 @@ class AlertXMLParser
         }// End of try
         catch (Exception e)
         {
+            e.printStackTrace();
+
             // Unfortunately, an error occured.
             // Right now, nothing happens.
             // null will be returned to the caller.
