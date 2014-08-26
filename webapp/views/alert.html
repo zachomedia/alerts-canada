@@ -1,0 +1,27 @@
+<article ng-repeat="info in alert.information | filter:{'language' : 'en-CA'}" ng-hide="isInPast(info.expires)">
+   <header>
+      <h1>{{info.headline | uppercase}}</h1>
+   </header>
+
+   <section class="alert-meta">
+      <dl>
+         <dt>Issuer</dt>
+         <dd>{{info.senderName}}</dd>
+
+         <dt>Issued</dt>
+         <dd>{{info.effective | date:"EEEE, MMMM d, yyyy 'at' h:mm a"}}</dd>
+
+         <dt>Expires</dt>
+         <dd>{{info.expires | date:"EEEE, MMMM d, yyyy 'at' h:mm a"}}</dd>
+
+         <dt>Affected Areas</dt>
+         <dd><span ng-repeat="area in info.areas">{{area.description}}{{ $last ? '' : ', '}}</span></dd>
+      </dl>
+   </section>
+
+   <hr />
+
+   <p ng-show="info.description" ng-bind-html="info.description | linebreaks"></p>
+
+   <p ng-show="info.instruction"><em>{{info.instruction}}</em></p>
+</article>
