@@ -62,6 +62,10 @@
                             </header>
 
                             <p ng-bind-html="info.description | linebreaks"></p>
+
+                            <p style="font-weight: bold;" ng-show="info.instruction">{{info.instruction}}</p>
+
+                            <p><a href="{{info.web}}" target="_blank" ng-show="info.web">Additional Information</a></p>
                         </article>
                     </article>
                 </section>

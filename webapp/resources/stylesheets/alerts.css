@@ -61,12 +61,12 @@ p > b {
 }
 
 a {
-	color: #878787;
+	color: #aa0000;
 	text-decoration: none;
 }
 
 a:hover {
-	color: #323232;
+	color: #880000;
 }
 
 a img {
@@ -312,7 +312,8 @@ body {
 	   }
 
 /** ALERTS **/
-.alert-information header {
+.alert-information {
+    padding-bottom: 8px;
 }
 
     .alert-information header p {
