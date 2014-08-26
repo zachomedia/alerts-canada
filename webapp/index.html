@@ -52,8 +52,8 @@
                 <h1 class="page-header">Alerts</h1>
 
                 <section id="alerts">
-                    <article class="alert-grouping" ng-repeat="alert in alerts">
-                        <article class="alert-information" ng-repeat="info in alert.information">
+                    <article class="alert-grouping" ng-repeat="alert in alerts | orderBy:'sent':'desc'">
+                        <article class="alert-information" ng-repeat="info in alert.information" ng-hide="isInPast(info.expires)">
                             <header>
                                 <h2>{{info.headline | uppercase}}</h2>
                                 <p>Issued by <em>{{info.senderName}}</em> on <em>{{info.effective | date:"EEEE, MMMM d, yyyy 'at' h:mm a"}}</em></p>
@@ -94,6 +94,12 @@
             })
             .controller('Alerts', ['$scope', '$resource', '$sce', function($scope, $resource, $sce) {
                 $scope.alerts = $resource('http://api.alerts.zacharyseguin.ca').query();
+
+                $scope.isInPast = function(time) {
+                    var past = new Date(time);
+                    var now = new Date();
+                    return past < now;
+                }
             }]);
         </script>
     </body>
