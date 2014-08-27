@@ -52,8 +52,12 @@ angular
 
                   area.events = {
                      click: _.bind(function(polygon, eventName, polyMouseEvent) {
-                        $location.path('/area/' + this.polygon.geocode).replace();
-                        $window.scrollTo(0, 0);
+                        var polygon = this.polygon;
+                        var scope = this.scope;
+                        scope.$apply(function() {
+                           $location.path('/area/' + polygon.geocode).replace();
+                           $window.scrollTo(0, 0);
+                        });
                      }, { scope: $scope, polygon: area} )};
 
                   for (var alindx in $scope.areasWithAlerts) {
