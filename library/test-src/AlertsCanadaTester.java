@@ -50,5 +50,7 @@ public class AlertsCanadaTester
                 writeFile("alerts.json", gson.toJson(ac.getAlerts()));
             }
         });
+
+        ac.parseAlert(ca.zacharyseguin.util.net.HttpContents.getURLContents(new URL("http://zachary-mb.zacharyseguin.ca/alert.xml")));
     }// End of main method
 }// End of class

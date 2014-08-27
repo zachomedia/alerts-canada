@@ -26,6 +26,7 @@ package ca.zacharyseguin.alertscanada;
 import ca.zacharyseguin.util.net.HttpContents;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -96,6 +97,9 @@ public class AlertsCanada
 
         StreamListener listener = new StreamListener(NAAD_HOSTNAME_OAKVILLE, NAAD_PORT);
         listener.start();
+
+        GarbageCollector gc = new GarbageCollector();
+        gc.start();
     }
 
     public List<Alert> getAlerts()
@@ -224,8 +228,6 @@ public class AlertsCanada
 
             this.processedAlerts.add(alert.getIdentifier());
             if (this.processedAlerts.size() > 50) this.processedAlerts.remove(0);
-
-
         }// End of if
     }// End of parseAlert method
 
@@ -233,6 +235,61 @@ public class AlertsCanada
     {
         this.alertsListeners.add(listener);
     }
+
+    public class GarbageCollector extends Thread
+    {
+        public void run()
+        {
+            while(true)
+            {
+                try
+                {
+                    //logger.info("Running garbage collection");
+
+                    for (String key : alerts.keySet())
+                    {
+                        Alert alert = alerts.get(key);
+
+                        // Check for expiry
+                        for (int y = 0; y < alert.getInformation().size(); ++y)
+                        {
+                            AlertInfo info = alert.getInformation().get(y);
+
+                            if (info.getExpires().compareTo(GregorianCalendar.getInstance()) < 0) {
+                                alert.getInformation().remove(info);
+                                for (AlertsListener listener : alertsListeners)
+                                {
+                                    listener.alertEnded(alert);
+                                }// end of for
+                            }
+                        }// End of for
+
+                        // If all information is gone, remove the alert
+                        if (alert.getInformation().size() == 0)
+                        {
+                            alerts.remove(alert.getIdentifier());
+                        }// End of if
+                    }// End of for
+
+                    //logger.debug(alerts.size() + " alerts remaining");
+                }// End of try
+                catch (Exception e)
+                {
+                    //e.printStackTrace();
+                    // Some error occured.
+                }// End of catch
+
+                try
+                {
+                    Thread.sleep(10 * 1000);
+                }// End of try
+                catch (Exception e)
+                {
+                    // Do nothing, there is really nothing that can be done about it :(
+                }// End of catch
+            }// End of while
+        }// End of run method
+    }// End of class
 
     public class StreamListener extends Thread
     {
