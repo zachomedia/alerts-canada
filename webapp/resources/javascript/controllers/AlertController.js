@@ -24,7 +24,7 @@
 
 angular
    .module('Alerts')
-   .controller('AlertController', ['$scope', '$routeParams', function($scope, $routeParams) {
+   .controller('AlertController', ['$scope', '$routeParams', '$location', function($scope, $routeParams, $location) {
       $scope.alert = null;
 
       $scope.loadAlert = function(alertId) {
@@ -38,6 +38,12 @@ angular
             }
 
             // check for reference
+            for (var rindx in alert.references) {
+               if (alert.references[rindx].identifier == $routeParams.identifier) {
+                  $location.path('/alert/' + alert.identifier).replace();
+                  break;
+               }
+            }
          }
       }; // End of loadAlert
 
