@@ -85,7 +85,7 @@
             <h1 class="title">Alerts Canada</h1>
 
             <section class="master">
-               <h1 class="title">Alerts</h1>
+               <h1 class="title">Active Alerts in Canada</h1>
 
                <article ng-repeat="alert in alerts | orderBy:'sent':'desc'" ng-class="{ selected: isSelectedAlert(alert)}">
                   <p ng-repeat="info in alert.information | filter:{'language' : 'en-CA'}">
@@ -106,15 +106,19 @@
       </div><!-- End of footer-container -->
 
       <!-- Javascript -->
+      <script src="resources/javascript/lodash.min.js"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCWtlDdYf0uGokaw6MLC2bGSO9Kmtf0r-k&sensor=true"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-resource.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-route.min.js"></script>
       <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.4/angular-sanitize.min.js"></script>
+      <script src="resources/javascript/angular-google-maps.min.js"></script>
       <script src="resources/javascript/Alerts.js"></script>
       <script src="resources/javascript/factories/AlertsAPI.js"></script>
       <script src="resources/javascript/filters/Linebreaks.js"></script>
       <script src="resources/javascript/controllers/AlertsController.js"></script>
       <script src="resources/javascript/controllers/AlertController.js"></script>
+      <script src="resources/javascript/controllers/AreaController.js"></script>
       <script src="resources/javascript/controllers/HomeController.js"></script>
    </body>
 </html>

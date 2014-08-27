@@ -33,7 +33,7 @@ body {
 }
 
    #header-container header {
-      width: 980px;
+      width: 960px;
       margin: 0 auto;
    }
 
@@ -47,7 +47,7 @@ body {
 }
 
       #navigation-container #navigation-wrapper {
-         width: 980px;
+         width: 960px;
          margin: 0 auto;
          padding: 0 10px;
 
@@ -113,3 +113,7 @@ body {
       font-size: 0.85em;
       line-height: 1.4em;
    }
+
+/* Google Maps */
+#alerts-map { height: 425px; }
+.angular-google-map-container { height: 400px; }

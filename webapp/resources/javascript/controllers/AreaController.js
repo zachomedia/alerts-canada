@@ -24,56 +24,36 @@
 
 angular
    .module('Alerts')
-   .controller('HomeController', ['$scope', '$window', '$location', function($scope, $window, $location) {
-      $scope.locationsWithAlerts = [];
+   .controller('AreaController', ['$scope', '$window', '$routeParams', '$location', function($scope, $window, $routeParams, $location) {
+      $scope.area = null;
+      $scope.areaAlerts = [];
 
-      $scope.map = {
-         center: {
-            latitude: 57,
-            longitude:  -101
-         },
-         zoom: 3,
-         fill: { color: '#aa0000', opacity: 0.8},
-         stroke: { color: '#990000', opacity: 0.8}
-      };
-
-      $scope.loadLocationsWithAlerts = function() {
-         $scope.areasWithAlerts = [];
+      $scope.loadAlerts = function(geocode) {
+         $scope.area = null;
+         $scope.areaAlerts = [];
+         $window.scrollTo(0, 0);
 
          for (var indx in $scope.alerts) {
             for (var iindx in $scope.alerts[indx].information) {
                if ($scope.alerts[indx].information[iindx].language != "en-CA") continue;
 
                for (var aindx in $scope.alerts[indx].information[iindx].areas) {
-                  var found = false;
+                  if ($scope.alerts[indx].information[iindx].areas[aindx].geocodes['layer:EC-MSC-SMC:1.0:CLC'] == $routeParams.geocode) {
+                     $scope.areaAlerts.push($scope.alerts[indx].information[iindx]);
 
-                  var area = $scope.alerts[indx].information[iindx].areas[aindx];
-                  area.geocode = area.geocodes['layer:EC-MSC-SMC:1.0:CLC'];
-
-                  area.events = {
-                     click: _.bind(function(polygon, eventName, polyMouseEvent) {
-                        $location.path('/area/' + this.polygon.geocode).replace();
-                        $window.scrollTo(0, 0);
-                     }, { scope: $scope, polygon: area} )};
-
-                  for (var alindx in $scope.areasWithAlerts) {
-                     if ($scope.areasWithAlerts[alindx].geocode == area.geocode) {
-                        found = true;
-                        break;
+                     if ($scope.area == null) {
+                        $scope.area = $scope.alerts[indx].information[iindx].areas[aindx];
+                        $scope.area.geocode = $scope.area.geocodes['layer:EC-MSC-SMC:1.0:CLC'];
                      }
-                  }
-
-                  if (!found) {
-                     $scope.areasWithAlerts.push(area);
                   }
                }
             }
          }
-      }
+      }; // End of loadAlerts
 
-      $scope.loadLocationsWithAlerts();
+      $scope.loadAlerts($routeParams.geocode);
 
       $scope.$on('alertsloaded', function() {
-         $scope.loadLocationsWithAlerts();
-      })
+         $scope.loadAlerts($routeParams.geocode);
+      });
    }]);

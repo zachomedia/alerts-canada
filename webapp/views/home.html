@@ -1,3 +1,33 @@
 <h1 class="title">Welcome to Alerts Canada</h1>
 
-<p>Click on any alert on the left to view more details</p>
+<article>
+   <header>
+      <h1>Areas with Active Alerts</h1>
+   </header>
+
+   <div id="alerts-map">
+      <google-map center="map.center" zoom="map.zoom" draggable="true">
+         <div ng-repeat="area in areasWithAlerts">
+            <polygon static="true" ng-repeat="polygon in area.polygons"
+                     path="polygon.coordinates"
+                     fill="map.fill"
+                     stroke="map.stroke"
+                     events="area.events"
+                     clickable="true"
+                      />
+         </div>
+      </google-map>
+   </div>
+</article>
+
+<article>
+   <header>
+      <h1>Areas with Active Alerts</h1>
+   </header>
+
+   <ul>
+      <li ng-repeat="area in areasWithAlerts | orderBy:'description':asc">
+         <a href="#/area/{{area.geocode}}" ng-click="selectedArea = area">{{area.description}}</a>
+      </li>
+   </ul>
+</article>

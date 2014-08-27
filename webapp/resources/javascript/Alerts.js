@@ -26,7 +26,8 @@ angular
    .module('Alerts', [
       'ngRoute',
       'ngSanitize',
-      'ngResource'
+      'ngResource',
+      'google-maps'
    ])
    .config(function($routeProvider) {
       $routeProvider
@@ -40,6 +41,10 @@ angular
          .when('/alert/:identifier', {
             templateUrl: 'views/alert.html',
             controller: 'AlertController'
+         })
+         .when('/area/:geocode', {
+            templateUrl: 'views/area.html',
+            controller: 'AreaController'
          })
          .otherwise({
             templateUrl: 'views/not-found.html'

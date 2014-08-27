@@ -116,6 +116,7 @@ em, b {
    #content-container #content h1 {
       font-size: 30px;
       padding: 8px 4px;
+      line-height: 34px;
    }
 
    #content-container #content h1.title {
@@ -243,7 +244,7 @@ em, b {
 
 /* Alert Info */
 #content-container #content .selected a {
-   color: inherit;   
+   color: inherit;
 }
 
 #content-container #content .alert-meta {

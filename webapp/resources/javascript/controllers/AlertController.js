@@ -24,10 +24,12 @@
 
 angular
    .module('Alerts')
-   .controller('AlertController', ['$scope', '$routeParams', '$location', function($scope, $routeParams, $location) {
+   .controller('AlertController', ['$scope', '$window', '$routeParams', '$location', function($scope, $window, $routeParams, $location) {
       $scope.alert = null;
 
       $scope.loadAlert = function(alertId) {
+         $window.scrollTo(0, 0);
+
          for (var indx in $scope.alerts) {
             var alert = $scope.alerts[indx];
 
@@ -49,7 +51,6 @@ angular
 
       $scope.loadAlert($routeParams.identifier);
 
-      console.log($scope);
       $scope.$on('alertsloaded', function() {
          $scope.loadAlert($routeParams.identifier);
       });
