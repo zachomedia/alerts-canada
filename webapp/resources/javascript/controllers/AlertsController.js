@@ -32,10 +32,4 @@ angular
       $scope.alerts = AlertsAPI.alerts.query(function() {
          $scope.$broadcast('alertsloaded');
       });
-
-      $scope.isInPast = function(time) {
-         var past = new Date(time);
-         var now = new Date();
-         return past < now;
-      };
    }]);

@@ -88,7 +88,7 @@
                <h1 class="title">Alerts</h1>
 
                <article ng-repeat="alert in alerts | orderBy:'sent':'desc'" ng-class="{ selected: isSelectedAlert(alert)}">
-                  <p ng-repeat="info in alert.information | filter:{'language' : 'en-CA'}" ng-hide="isInPast(info.expires)">
+                  <p ng-repeat="info in alert.information | filter:{'language' : 'en-CA'}">
                      <a href="#/alert/{{alert.identifier}}">{{info.headline | uppercase}}</a>
                   </p>
                </article>

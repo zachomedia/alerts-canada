@@ -1,4 +1,4 @@
-<article ng-repeat="info in alert.information | filter:{'language' : 'en-CA'}" ng-hide="isInPast(info.expires)">
+<article ng-repeat="info in alert.information | filter:{'language' : 'en-CA'}">
    <header>
       <h1>{{info.headline | uppercase}}</h1>
    </header>
