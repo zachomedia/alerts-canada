@@ -42,7 +42,6 @@ angular
             // check for reference
             for (var rindx in alert.references) {
                if (alert.references[rindx].identifier == $routeParams.identifier) {
-                  console.log($scope);
                   $scope.addBanner("The alert you requested has been updated. You have been redirected to the latest version.");
                   $location.path('/alert/' + alert.identifier).replace();
                   break;

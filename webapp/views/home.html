@@ -9,8 +9,8 @@
          <div ng-repeat="area in areasWithAlerts">
             <polygon static="true" ng-repeat="polygon in area.polygons"
                      path="polygon.coordinates"
-                     fill="map.fill"
-                     stroke="map.stroke"
+                     fill="area.colours.fill"
+                     stroke="area.colours.stroke"
                      events="area.events"
                      clickable="true"
                       />
