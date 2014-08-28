@@ -23,32 +23,24 @@
 'use strict';
 
 angular
-   .module('Alerts', [
-      'ngRoute',
-      'ngSanitize',
-      'ngResource',
-      'google-maps'
-   ])
-   .config(function($routeProvider, $locationProvider) {
-      $locationProvider.html5Mode(true);
+   .module('Alerts')
+   .controller('PageController', ['$scope', function($scope) {
+      $scope.messages = [];
+      $scope.cuedMessages = [];
 
-      $routeProvider
-         .when('/', {
-            templateUrl: '/views/home.html',
-            controller: 'HomeController'
-         })
-         .when('/about', {
-            templateUrl: '/views/about.html'
-         })
-         .when('/alert/:identifier', {
-            templateUrl: '/views/alert.html',
-            controller: 'AlertController'
-         })
-         .when('/area/:geocode', {
-            templateUrl: '/views/area.html',
-            controller: 'AreaController'
-         })
-         .otherwise({
-            templateUrl: '/views/not-found.html'
-         });
-   });
+      $scope.now = new Date();
+
+      $scope.addBanner = function(message) {
+         $scope.cuedMessages.push(message);
+      }
+
+      $scope.parseDate = function(date) {
+         return new Date(date);
+      }
+
+      $scope.$on('$routeChangeStart', function() {
+         $scope.messages = $scope.cuedMessages;
+         $scope.cuedMessages = [];
+         $scope.now = new Date();
+      })
+   }]);

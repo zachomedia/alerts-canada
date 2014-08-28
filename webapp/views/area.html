@@ -8,25 +8,26 @@
    <section class="alert-meta">
       <dl>
          <dt>Issuer</dt>
-         <dd>{{info.senderName}}</dd>
+         <dd ng-show="info.web"><a href="{{info.web}}">{{info.senderName}}</a></dd>
+         <dd ng-hide="info.web">{{info.senderName}}</dd>
 
          <dt>Issued</dt>
-         <dd>{{info.effective | date:"EEEE, MMMM d, yyyy 'at' h:mm a"}}</dd>
+         <dd>{{now - parseDate(info.effective) | timeDifference}} &ndash; {{info.effective | date:"EEEE, MMMM d, yyyy 'at' h:mm a"}}</dd>
 
          <dt>Expires</dt>
-         <dd>{{info.expires | date:"EEEE, MMMM d, yyyy 'at' h:mm a"}}</dd>
+         <dd>{{parseDate(info.expires) - now | timeDifference}} &ndash; {{info.expires | date:"EEEE, MMMM d, yyyy 'at' h:mm a"}}</dd>
 
          <dt>Affected Areas</dt>
          <dd><span ng-repeat="area in info.areas">{{area.description}}{{ $last ? '' : ', '}}</span></dd>
 
          <dt>Severity</dt>
-         <dd>{{info.severity}}</dd>
+         <dd style="text-transform: capitalize;">{{info.severity | lowercase}}</dd>
 
          <dt>Urgency</dt>
-         <dd>{{info.urgency}}</dd>
+         <dd style="text-transform: capitalize;">{{info.urgency | lowercase}}</dd>
 
          <dt>Certainty</dt>
-         <dd>{{info.certainty}}</dd>
+         <dd style="text-transform: capitalize;">{{info.certainty | lowercase}}</dd>
       </dl>
    </section>
 

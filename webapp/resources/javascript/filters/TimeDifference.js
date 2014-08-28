@@ -24,36 +24,30 @@
 
 angular
    .module('Alerts')
-   .controller('AlertController', ['$scope', '$window', '$routeParams', '$location', function($scope, $window, $routeParams, $location) {
-      $scope.alert = null;
+   .filter('timeDifference', function($filter) {
+      return function(timeDifference) {
+         var hours = Math.floor(timeDifference / 3600000);
+         timeDifference = timeDifference % 3600000;
 
-      $scope.loadAlert = function(alertId) {
-         $window.scrollTo(0, 0);
+         var minutes = Math.floor(timeDifference / 60000);
+         timeDifference = timeDifference % 60000;
 
-         for (var indx in $scope.alerts) {
-            var alert = $scope.alerts[indx];
+         var seconds = Math.floor(timeDifference / 1000);
 
-            // check for alert with id
-            if (alert.identifier == $routeParams.identifier) {
-               $scope.alert = alert;
-               break;
+         if (minutes == 0) {
+            return seconds + " seconds";
+         } else if (hours == 0) {
+            if (minutes == 1) {
+               return "1 minute";
+            } else {
+               return minutes + " minutes";
             }
-
-            // check for reference
-            for (var rindx in alert.references) {
-               if (alert.references[rindx].identifier == $routeParams.identifier) {
-                  console.log($scope);
-                  $scope.addBanner("The alert you requested has been updated. You have been redirected to the latest version.");
-                  $location.path('/alert/' + alert.identifier).replace();
-                  break;
-               }
+         } else {
+            if (hours == 1) {
+               return "1 hour, " + minutes + " minutes";
+            } else {
+               return hours + " hours, " + minutes + " minutes";
             }
          }
-      }; // End of loadAlert
-
-      $scope.loadAlert($routeParams.identifier);
-
-      $scope.$on('alertsloaded', function() {
-         $scope.loadAlert($routeParams.identifier);
-      });
-   }]);
+       };
+   })

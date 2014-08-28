@@ -89,6 +89,16 @@ body {
          float: right;
       }
 
+/* Banners */
+#banners-container {
+   margin-top: 20px;
+}
+
+   .banner {
+      width: 900px;
+      margin: 0 auto;
+   }
+
 /* Content */
 #content-container {
 
@@ -99,6 +109,10 @@ body {
       margin: 0 auto;
 
       padding: 20px;
+   }
+
+   #content-container #content .master, #content-container #content .detail {
+      margin-top: 10px;
    }
 
 /* Footer */
