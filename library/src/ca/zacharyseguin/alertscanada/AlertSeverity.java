@@ -60,7 +60,7 @@ public enum AlertSeverity implements AlertEnum
      * Severity unknown.
      * @since 1.0
      */
-    UKNOWN("Unknown");
+    UNKNOWN("Unknown");
 
     /**
      * Value provided by NAAD.
